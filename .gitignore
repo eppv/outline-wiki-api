@@ -1,0 +1,34 @@
+
+# ide
+.idea/
+.vscode/
+
+# python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C ext
+*.so
+
+# tests
+.pytest_cache/
+.cache/
+
+# env
+.env
+.venv/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# build
+build/
+dist/
+*.egg-info
+
+# custom
+dev/
+logs/
+temp/
