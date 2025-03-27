@@ -22,12 +22,12 @@ class Client:
         self._timeout = timeout
         self._ssl_verify = ssl_verify
         self._headers = {
-            'Authorization': f'Bearer {self.token}',
+            'Authorization': f'Bearer {self._token}',
             'Content-type': 'application/json',
             'Accept': 'application/json'
         }
         self._client = httpx.Client(
-            base_url=self._base_url,
+            base_url=self._url,
             headers=self._headers,
             timeout=self._timeout,
             verify=self._ssl_verify

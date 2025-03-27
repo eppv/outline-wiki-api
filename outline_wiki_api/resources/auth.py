@@ -6,8 +6,7 @@ class Auth(Resources):
 
     def __init__(self, client):
         super().__init__(client)
-        data = self.info().json()['data']
-        self._user_id = data['user']['id']
+        self._user_id = None
 
     @property
     def user_id(self):
@@ -18,5 +17,5 @@ class Auth(Resources):
         Retrieve authentication options
         :return:
         """
-        method = f'{self._path}.config'
-        return self.client.post(method=method)
+        endpoint = f'{self._path}.config'
+        return self.post(endpoint=endpoint)

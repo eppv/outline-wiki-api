@@ -3,9 +3,9 @@ from .client import Client
 from .utils import get_base_url
 from .resources.documents import Documents
 from .resources.collections import Collections
+from .resources.auth import Auth
+from .models import Document, Collection, User
 
-
-# from .resources import Document, Collection, User
 
 class Outline:
     def __init__(
@@ -15,6 +15,7 @@ class Outline:
     ) -> None:
         self.url = get_base_url(url)
         self._client = Client(token=token, url=url)
+        self.auth = Auth(self._client)
         self.documents = Documents(self._client)
         self.collections = Collections(self._client)
         # Add other resources here

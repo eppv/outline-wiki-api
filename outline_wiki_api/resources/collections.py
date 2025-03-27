@@ -23,7 +23,7 @@ class Collections(Resources):
             "statusFilter": status_filter if status_filter else []
         }
         print(data)
-        return self.client.post(
+        return self._client.request(
             method=method,
             data=data
         )
