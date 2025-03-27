@@ -1,18 +1,13 @@
-
-from typing import Optional
-from outline_wiki_api.base import EntityCollection
+from outline_wiki_api.resources.base import Resources
 
 
-class Auth(EntityCollection):
+class Auth(Resources):
     _path = 'auth'
 
     def __init__(self, client):
         super().__init__(client)
-        self._user_id: Optional[str] = None
-
-    def init(self):
         data = self.info().json()['data']
-        setattr(self, 'user_id', data['user']['id'])
+        self._user_id = data['user']['id']
 
     @property
     def user_id(self):

@@ -1,17 +1,15 @@
 
 import json
 from typing import Optional
+from ..client import Client
 
 
-class EntityCollection:
+class Resources:
 
     _path: str
 
-    def __init__(
-            self,
-            client
-    ):
-        self.client = client
+    def __init__(self, client: Client):
+        self._client = client
 
     def info(self,
              data: Optional[dict] = None
@@ -21,7 +19,7 @@ class EntityCollection:
         :return:
         """
         method = f'{self._path}.info'
-        return self.client.post(
+        return self._client.request(
             method=method,
             data=data
         )

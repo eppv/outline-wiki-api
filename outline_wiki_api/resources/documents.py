@@ -1,32 +1,12 @@
 
 from typing import Optional
-from dataclasses import dataclass
-from outline_wiki_api.base import EntityCollection
+
+from outline_wiki_api.resources.base import Resources
+
+from ..models import Document
 
 
-@dataclass
-class Document:
-
-    def __init__(
-            self,
-            title: str = 'Untitled',
-            text: str = '',
-            collection_id: str = '',
-            parent_document_id: str = '',
-            template_id: Optional[str] = None,
-            template: bool = False,
-            publish: bool = True) -> None:
-
-        self.title = title
-        self.text = text
-        self.collection_id = collection_id
-        self.parent_document_id = parent_document_id
-        self.template_id = template_id
-        self.template = template
-        self.publish = publish
-
-
-class Documents(EntityCollection):
+class Documents(Resources):
     _path: str = 'documents'
 
     def list(self,
@@ -46,7 +26,7 @@ class Documents(EntityCollection):
             "sort": sort,
             "direction": direction,
             "collectionId": collection_id,
-            "userId": user_id if user_id else f"{self.client.auth.user_id}",
+            "userId": user_id if user_id else f"{self._client.auth.user_id}",
             "template": template
         }
 

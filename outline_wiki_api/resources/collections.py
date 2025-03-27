@@ -1,9 +1,9 @@
 
 from typing import Optional
-from outline_wiki_api.base import EntityCollection
+from outline_wiki_api.resources.base import Resources
 
 
-class Collections(EntityCollection):
+class Collections(Resources):
     _path: str = 'collections'
 
     def list(self,
