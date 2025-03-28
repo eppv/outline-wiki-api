@@ -1,8 +1,4 @@
-import json
-import requests
 import httpx
-from outline_wiki_api import utils
-
 from typing import Optional, Dict, Any
 from .exceptions import OutlineAPIError, OutlineAuthenticationError
 
