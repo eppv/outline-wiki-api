@@ -1,8 +1,5 @@
 import os
 from .const import DEFAULT_URL
-from dotenv import load_dotenv
-
-load_dotenv()
 
 
 def get_base_url(url: str | None = None) -> str:
