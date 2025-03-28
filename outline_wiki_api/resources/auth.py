@@ -1,6 +1,6 @@
 
 from .base import Resources
-from ..models import User
+from ..models import User, Team
 
 
 class Auth(Resources):
@@ -13,6 +13,10 @@ class Auth(Resources):
     def get_current_user(self):
         response = self.info().json()
         return User(**response['data']['user'])
+
+    def get_current_team(self):
+        response = self.info().json()
+        return Team(**response['data']['team'])
 
     def config(self):
         """

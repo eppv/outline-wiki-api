@@ -14,7 +14,8 @@ license = { file = "LICENSE" }
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
-    "requests>=2.32.0"
+    "pydantic>=2.0.0",
+    "httpx>=0.28.0"
 ]
 
 [project.urls]

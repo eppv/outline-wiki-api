@@ -21,6 +21,25 @@ class User(BaseModel):
     notificationSettings: Optional[Dict]
 
 
+class Team(BaseModel):
+    id: str
+    name: str
+    avatarUrl: Optional[str]
+    sharing: bool
+    memberCollectionCreate: bool
+    memberTeamCreate: bool
+    defaultCollectionId: Optional[str]
+    documentEmbeds: bool
+    guestSignin: bool
+    subdomain: Optional[str]
+    domain: Optional[str]
+    url: str
+    defaultUserRole: str
+    inviteRequired: bool
+    allowedDomains: Optional[List]
+    preferences: Optional[Dict]
+
+
 class Collection(BaseModel):
     id: str
     name: str
