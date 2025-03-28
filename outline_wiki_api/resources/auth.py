@@ -1,4 +1,6 @@
-from outline_wiki_api.resources.base import Resources
+
+from .base import Resources
+from ..models import User
 
 
 class Auth(Resources):
@@ -8,9 +10,9 @@ class Auth(Resources):
         super().__init__(client)
         self._user_id = None
 
-    @property
-    def user_id(self):
-        return self._user_id
+    def get_current_user(self):
+        response = self.info().json()
+        return User(**response['data']['user'])
 
     def config(self):
         """

@@ -1,20 +1,21 @@
 from typing import Optional
 from .client import Client
-from .utils import get_base_url
+from .utils import get_base_url, get_token
 from .resources.documents import Documents
 from .resources.collections import Collections
 from .resources.auth import Auth
 from .models import Document, Collection, User
 
 
-class Outline:
+class OutlineWiki:
     def __init__(
             self,
-            token: str,
+            token: Optional[str] = None,
             url: Optional[str] = None
     ) -> None:
         self.url = get_base_url(url)
-        self._client = Client(token=token, url=url)
+        self._token = get_token(token)
+        self._client = Client(token=self._token, url=self.url)
         self.auth = Auth(self._client)
         self.documents = Documents(self._client)
         self.collections = Collections(self._client)

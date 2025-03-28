@@ -1,5 +1,8 @@
+import os
+from .const import DEFAULT_URL
+from dotenv import load_dotenv
 
-from outline_wiki_api import const
+load_dotenv()
 
 
 def get_base_url(url: str | None = None) -> str:
@@ -9,7 +12,13 @@ def get_base_url(url: str | None = None) -> str:
         The base URL
     """
     if not url:
-        return const.DEFAULT_URL
-
+        url = os.getenv('OUTLINE_URL')
+        if not url:
+            return DEFAULT_URL
     return url.rstrip("/")
 
+
+def get_token(token: str | None = None) -> str:
+    if not token:
+        token = os.getenv('OUTLINE_TOKEN')
+    return token

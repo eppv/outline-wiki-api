@@ -7,11 +7,18 @@ from pydantic import BaseModel
 class User(BaseModel):
     id: str
     name: str
-    avatar_url: Optional[str]
+    avatarUrl: Optional[str]
     email: Optional[str]
-    is_admin: bool
-    created_at: datetime
-    updated_at: datetime
+    color: Optional[str]
+    role: Optional[str]
+    isSuspended: bool
+    createdAt: datetime
+    updatedAt: datetime
+    lastActiveAt: Optional[datetime]
+    timezone: Optional[str]
+    language: Optional[str]
+    preferences: Optional[Dict]
+    notificationSettings: Optional[Dict]
 
 
 class Collection(BaseModel):
