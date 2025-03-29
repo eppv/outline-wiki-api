@@ -1,10 +1,10 @@
 import json
 from io import BufferedReader
-from typing import Optional, Dict
+from typing import Optional, Dict, Union
 from uuid import UUID
 from .base import Resources
 from ..models.document import Document
-from ..models.search import Pagination, Sorting
+from ..models.search import Pagination, Sort
 
 
 class Documents(Resources):
@@ -37,8 +37,8 @@ class Documents(Resources):
     def import_file(
             self,
             file: BufferedReader,
-            collection_id: UUID,
-            parent_document_id: Optional[UUID] = None,
+            collection_id: Union[UUID, str],
+            parent_document_id: Optional[Union[UUID, str]] = None,
             template: bool = False,
             publish: bool = False
     ) -> Document:
@@ -82,13 +82,13 @@ class Documents(Resources):
 
     def list(
             self,
-            collection_id: Optional[UUID] = None,
-            user_id: Optional[UUID] = None,
-            backlink_document_id: Optional[UUID] = None,
-            parent_document_id: Optional[UUID] = None,
+            collection_id: Optional[Union[UUID, str]] = None,
+            user_id: Optional[Union[UUID, str]] = None,
+            backlink_document_id: Optional[Union[UUID, str]] = None,
+            parent_document_id: Optional[Union[UUID, str]] = None,
             template: Optional[bool] = None,
             pagination: Optional[Pagination] = None,
-            sorting: Optional[Sorting] = None
+            sorting: Optional[Sort] = None
     ) -> Dict:
         """
         List all published and user's draft documents
@@ -113,7 +113,45 @@ class Documents(Resources):
             data.update(sorting.dict())
 
         response = self.post("list", data=data)
-        return response.json()["data"]
+        return response.json()
 
-    def create(self, document: Document):
-        raise NotImplementedError
+    def create(
+            self,
+            title: str,
+            collection_id: Union[UUID, str],
+            text: Optional[str] = None,
+            parent_document_id: Optional[Union[UUID, str]] = None,
+            template_id: Optional[Union[UUID, str]] = None,
+            template: bool = False,
+            publish: bool = False
+    ) -> Document:
+        """
+        Create a new document
+
+        Args:
+            title: Document title
+            collection_id: Target collection ID
+            text: Document content (markdown)
+            parent_document_id: Optional parent document ID
+            template_id: Template to base document on
+            template: Whether to create as template
+            publish: Whether to publish immediately
+
+        Returns:
+            Document: The created document
+        """
+        data = {
+            "title": title,
+            "collectionId": str(collection_id),
+            "template": template,
+            "publish": publish
+        }
+        if text:
+            data["text"] = text
+        if parent_document_id:
+            data["parentDocumentId"] = str(parent_document_id)
+        if template_id:
+            data["templateId"] = str(template_id)
+
+        response = self.post("create", data=data)
+        return Document(**response.json()["data"])

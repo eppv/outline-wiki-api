@@ -4,28 +4,13 @@ from typing import Optional, Literal
 from uuid import UUID
 from pydantic import BaseModel, Field
 from .user import User  # Assuming User model is defined in user.py
+from .search import Sort
 
 
 class Permission(str, Enum):
     """Available permission options for collections"""
     READ = 'read'
     READ_WRITE = 'read_write'
-
-
-class CollectionSort(BaseModel):
-    """
-    Defines the sorting order for documents within a collection.
-    """
-    field: str = Field(
-        ...,
-        description="Field to sort documents by",
-        example="title"
-    )
-    direction: Literal["asc", "desc"] = Field(
-        "asc",
-        description="Sort direction - ascending or descending",
-        example="desc"
-    )
 
 
 class Collection(BaseModel):
@@ -67,7 +52,7 @@ class Collection(BaseModel):
         example="All HR policies and procedures"
     )
 
-    sort: Optional[CollectionSort] = Field(
+    sort: Optional[Sort] = Field(
         None,
         description="The sort of documents in the collection. Note that not all "
                     "API responses respect this and it is left as a frontend concern "

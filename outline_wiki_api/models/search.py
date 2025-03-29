@@ -9,9 +9,17 @@ class Pagination(BaseModel):
     limit: int
 
 
-class Sorting(BaseModel):
-    field: str
-    direction: Literal["asc", "desc"] = "asc"
+class Sort(BaseModel):
+    field: str = Field(
+        ...,
+        description="Field to sort documents by",
+        example="title"
+    )
+    direction: Literal["asc", "desc"] = Field(
+        "asc",
+        description="Sort direction - ascending or descending",
+        example="desc"
+    )
 
 
 class SearchResult(BaseModel):

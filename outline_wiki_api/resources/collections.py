@@ -1,6 +1,7 @@
 
-from typing import Optional
+from typing import Optional, List, Dict
 from .base import Resources
+from ..models.search import Sort, Pagination
 
 
 class Collections(Resources):
@@ -10,26 +11,37 @@ class Collections(Resources):
     at which read and write permissions can be granted to individual users or
     groups of users.
     """
-    _path: str = 'collections'
+    _path: str = '/collections'
 
-    def list(self,
-             offset: int = 1,
-             limit: int = 25,
-             sort: str = 'updatedAt',
-             direction: str = 'DESC',
-             query: str = '',
-             status_filter: Optional[list] = None):
-        method = f'{self._path}.list'
-        data = {
-            "offset": offset,
-            "limit": limit,
-            "sort": sort,
-            "direction": direction,
-            "query": query,
-            "statusFilter": status_filter if status_filter else []
-        }
-        print(data)
-        return self._client.request(
-            method=method,
-            data=data
-        )
+    def list(
+            self,
+            query: Optional[str] = None,
+            status_filter: Optional[List[str]] = None,
+            pagination: Optional[Pagination] = None,
+            sorting: Optional[Sort] = None
+    ) -> Dict:
+        """
+        List all collections
+
+        Args:
+            query: Optional name filter
+            status_filter: Optional statuses to filter by
+            pagination: Pagination options
+            sorting: Sorting options
+
+        Returns:
+            Dict: Contains data (collections), policies, and pagination info
+        """
+        data = {}
+        if query:
+            data["query"] = query
+        if status_filter:
+            data["statusFilter"] = status_filter
+        if pagination:
+            data.update(pagination.dict())
+        if sorting:
+            data.update(sorting.dict())
+
+        response = self.post("list", data=data)
+
+        return response.json()

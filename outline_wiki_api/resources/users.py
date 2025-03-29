@@ -8,4 +8,4 @@ class Users(Resources):
     can be created automatically when signing in with SSO or when a user is
     invited via email.
     """
-    _path: str = 'users'
+    _path: str = '/users'
