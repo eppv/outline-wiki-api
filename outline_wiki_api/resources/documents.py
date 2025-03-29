@@ -1,4 +1,4 @@
-
+import json
 from io import BufferedReader
 from typing import Optional, Dict
 from uuid import UUID
@@ -31,7 +31,8 @@ class Documents(Resources):
         if share_id:
             data["shareId"] = str(share_id)
         response = self.post("info", data=data)
-        return Document(**response["data"])
+        print(json.dumps(response.json()["data"], indent=4))
+        return Document(**response.json()["data"])
 
     def import_file(
             self,
@@ -112,7 +113,7 @@ class Documents(Resources):
             data.update(sorting.dict())
 
         response = self.post("list", data=data)
-        return response
+        return response.json()["data"]
 
     def create(self, document: Document):
         raise NotImplementedError
