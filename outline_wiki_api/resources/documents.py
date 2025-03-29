@@ -1,7 +1,7 @@
 
 from typing import Optional
 from .base import Resources
-from ..models.various import Document
+from ..models.document import Document
 
 
 class Documents(Resources):
