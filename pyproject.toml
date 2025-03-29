@@ -10,6 +10,7 @@ description = "A python API for Outline Wiki."
 authors = [
     { name = "eppv", email = "evgeniypalych@gmail.com" }
 ]
+
 license = { file = "LICENSE" }
 readme = "README.md"
 requires-python = ">=3.12"
@@ -20,4 +21,9 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/eppv/outline-wiki-api"
+GitHub = "https://github.com/eppv/outline-wiki-api"
+
+
+[tool.setuptools.packages.find]
+include = ["outline_wiki_api*"]
+exclude = ["docs*", "tests*", "dev*"]
