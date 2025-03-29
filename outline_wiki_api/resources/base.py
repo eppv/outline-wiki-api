@@ -15,9 +15,10 @@ class Resources:
              endpoint: str,
              params: Optional[Dict] = None,
              data: Optional[Dict] = None):
+        full_endpoint = f"{self._path}.{endpoint}"
         response = self._client.request(
             method="POST",
-            endpoint=endpoint,
+            endpoint=full_endpoint,
             params=params,
             data=data
         )
