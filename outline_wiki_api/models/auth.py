@@ -1,27 +1,29 @@
+from pydantic import BaseModel, Field
+from typing import Optional, List
 
-from typing import Optional
-from outline_wiki_api.base import EntityCollection
+from .response import Policy
+from .user import User
+from .team import Team
 
 
-class Auth(EntityCollection):
-    _path = 'auth'
+class AuthData(BaseModel):
+    """
+    Authentication data for the current API key
+    """
+    user: User
+    team: Team
+    groups: Optional[List]
+    group_users: Optional[List] = Field(..., alias="groupUsers")
+    collaboration_token: str = Field(..., alias="collaborationToken")
+    available_teams: Optional[List] = Field(..., alias="availableTeams")
 
-    def __init__(self, client):
-        super().__init__(client)
-        self._user_id: Optional[str] = None
 
-    def init(self):
-        data = self.info().json()['data']
-        setattr(self, 'user_id', data['user']['id'])
+class AuthInfo(BaseModel):
+    """
+    Authentication details for the current API key
+    """
+    data: AuthData
+    policies: Optional[List[Policy]]
+    status: int
+    ok: bool
 
-    @property
-    def user_id(self):
-        return self._user_id
-
-    def config(self):
-        """
-        Retrieve authentication options
-        :return:
-        """
-        method = f'{self._path}.config'
-        return self.client.post(method=method)
