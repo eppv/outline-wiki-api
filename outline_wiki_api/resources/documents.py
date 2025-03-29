@@ -1,10 +1,14 @@
 import json
 from io import BufferedReader
-from typing import Optional, Dict, Union
+from typing import Optional, Dict, Union, Literal
 from uuid import UUID
 from .base import Resources
-from ..models.document import Document
-from ..models.search import Pagination, Sort
+from ..models.response import Pagination, Sort
+from ..models.document import (
+    Document,
+    DocumentListResponse,
+    DocumentSearchResultResponse
+)
 
 
 class Documents(Resources):
@@ -89,7 +93,7 @@ class Documents(Resources):
             template: Optional[bool] = None,
             pagination: Optional[Pagination] = None,
             sorting: Optional[Sort] = None
-    ) -> Dict:
+    ) -> DocumentListResponse:
         """
         List all published and user's draft documents
 
@@ -113,7 +117,7 @@ class Documents(Resources):
             data.update(sorting.dict())
 
         response = self.post("list", data=data)
-        return response.json()
+        return DocumentListResponse(**response.json())
 
     def create(
             self,
@@ -155,3 +159,37 @@ class Documents(Resources):
 
         response = self.post("create", data=data)
         return Document(**response.json()["data"])
+
+    def search(
+            self,
+            query: str,
+            user_id: Optional[Union[UUID, str]] = None,
+            collection_id: Optional[Union[UUID, str]] = None,
+            document_id: Optional[Union[UUID, str]] = None,
+            status_filter: Optional[Literal["draft", "archived", "published"]] = None,
+            date_filter: Optional[Literal["day", "week", "month", "year"]] = None,
+            pagination: Optional[Pagination] = None
+    ) -> DocumentSearchResultResponse:
+        """
+        Search documents with keywords
+
+        Returns:
+            Response: Contains search results, policies, and pagination info
+        """
+        data = {"query": query}
+        if user_id:
+            data["userId"] = str(user_id)
+        if collection_id:
+            data["collectionId"] = str(collection_id)
+        if document_id:
+            data["documentId"] = str(document_id)
+        if status_filter:
+            data["statusFilter"] = status_filter
+        if date_filter:
+            data["dateFilter"] = date_filter
+        if pagination:
+            data.update(pagination.dict())
+
+        response = self.post("search", data=data)
+
+        return DocumentSearchResultResponse(**response.json())

@@ -1,10 +1,10 @@
 from datetime import datetime
 from enum import Enum
-from typing import Optional, Literal
+from typing import Optional, List
 from uuid import UUID
 from pydantic import BaseModel, Field
-from .user import User  # Assuming User model is defined in user.py
-from .search import Sort
+from .user import User
+from .response import Sort, Response
 
 
 class Permission(str, Enum):
@@ -46,7 +46,7 @@ class Collection(BaseModel):
         max_length=100
     )
 
-    description: str = Field(
+    description: Optional[str] = Field(
         "",
         description="A description of the collection, may contain markdown formatting",
         example="All HR policies and procedures"
@@ -67,7 +67,7 @@ class Collection(BaseModel):
         max_length=2
     )
 
-    color: str = Field(
+    color: Optional[str] = Field(
         ...,
         description="A color representing the collection, this is used to help "
                     "make collections more identifiable in the UI. It should be in "
@@ -131,3 +131,7 @@ class Collection(BaseModel):
         description="User who archived this collection",
         read_only=True
     )
+
+
+class CollectionListResponse(Response):
+    data: Optional[List[Collection]]

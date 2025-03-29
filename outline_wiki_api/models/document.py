@@ -1,9 +1,10 @@
 
 from datetime import datetime
 from typing import Optional, List
-from pydantic import BaseModel, Field, HttpUrl
+from pydantic import BaseModel, Field
 from uuid import UUID
 from .user import User
+from .response import Response
 
 
 class DocumentTasks(BaseModel):
@@ -161,4 +162,18 @@ class Document(BaseModel):
         None,
         alias="insightsEnabled"
     )
+
+
+class DocumentListResponse(Response):
+    data: Optional[List[Document]]
+
+
+class DocumentSearchResult(BaseModel):
+    ranking: float
+    context: str
+    document: Document
+
+
+class DocumentSearchResultResponse(Response):
+    data: Optional[List[DocumentSearchResult]]
 

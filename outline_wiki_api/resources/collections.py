@@ -1,7 +1,8 @@
 
 from typing import Optional, List, Dict
 from .base import Resources
-from ..models.search import Sort, Pagination
+from ..models.response import Pagination, Sort
+from ..models.collection import CollectionListResponse
 
 
 class Collections(Resources):
@@ -19,7 +20,7 @@ class Collections(Resources):
             status_filter: Optional[List[str]] = None,
             pagination: Optional[Pagination] = None,
             sorting: Optional[Sort] = None
-    ) -> Dict:
+    ) -> CollectionListResponse:
         """
         List all collections
 
@@ -44,4 +45,4 @@ class Collections(Resources):
 
         response = self.post("list", data=data)
 
-        return response.json()
+        return CollectionListResponse(**response.json())
