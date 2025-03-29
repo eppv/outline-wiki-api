@@ -1,6 +1,8 @@
 
 from .base import Resources
 from ..models.auth import AuthInfo
+from ..models.user import User
+from ..models.team import Team
 
 
 class Auth(Resources):
@@ -31,10 +33,16 @@ class Auth(Resources):
         endpoint = "config"
         return self.post(endpoint=endpoint)
 
-    def get_current_user(self):
+    def get_current_user(self) -> User:
+        """
+        Retrieve current User
+        """
         auth_info = self.info()
         return auth_info.data.user
 
-    def get_current_team(self):
+    def get_current_team(self) -> Team:
+        """
+        Retrieve current Team
+        """
         auth_info = self.info()
         return auth_info.data.team

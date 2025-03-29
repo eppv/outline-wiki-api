@@ -1,9 +1,10 @@
 
 from io import BufferedReader
-from typing import Optional
+from typing import Optional, Dict
 from uuid import UUID
 from .base import Resources
 from ..models.document import Document
+from ..models.search import Pagination, Sorting
 
 
 class Documents(Resources):
@@ -75,52 +76,43 @@ class Documents(Resources):
         Returns:
             str: Document content in Markdown format
         """
-        response = self.post("export", data={"id": id})
-        return response["data"]
+        response = self.post("export", data={"id": doc_id})
+        return response.json()["data"]
 
-    def list(self,
-             offset: int = 1,
-             limit: int = 25,
-             sort: str = 'updatedAt',
-             direction: str = 'DESC',
-             collection_id: Optional[str] = None,
-             user_id: str = '',
-             backlink_document_id: Optional[str] = None,
-             parent_document_id: Optional[str] = None,
-             template: bool = False):
-        method = f'{self._path}.list'
-        data = {
-            "offset": offset,
-            "limit": limit,
-            "sort": sort,
-            "direction": direction,
-            "collectionId": collection_id,
-            "userId": user_id if user_id else f"{self._client.auth.user_id}",
-            "template": template
-        }
+    def list(
+            self,
+            collection_id: Optional[UUID] = None,
+            user_id: Optional[UUID] = None,
+            backlink_document_id: Optional[UUID] = None,
+            parent_document_id: Optional[UUID] = None,
+            template: Optional[bool] = None,
+            pagination: Optional[Pagination] = None,
+            sorting: Optional[Sorting] = None
+    ) -> Dict:
+        """
+        List all published and user's draft documents
 
-        data.update({"backlinkDocumentId": backlink_document_id}) if backlink_document_id else None
-        data.update({"parentDocumentId": parent_document_id}) if parent_document_id else None
+        Returns:
+            Dict: Contains data (documents), policies, and pagination info
+        """
+        data = {}
+        if collection_id:
+            data["collectionId"] = str(collection_id)
+        if user_id:
+            data["userId"] = str(user_id)
+        if backlink_document_id:
+            data["backlinkDocumentId"] = str(backlink_document_id)
+        if parent_document_id:
+            data["parentDocumentId"] = str(parent_document_id)
+        if template is not None:
+            data["template"] = template
+        if pagination:
+            data.update(pagination.dict())
+        if sorting:
+            data.update(sorting.dict())
 
-        return self.client.post(
-            method=method,
-            data=data
-        )
+        response = self.post("list", data=data)
+        return response
 
     def create(self, document: Document):
-        method = f'{self._path}.create'
-        data = {
-            "title": document.title,
-            "text": document.text,
-            "collectionId": document.collection_id,
-            "parentDocumentId": document.parent_document_id,
-            "template": document.template,
-            "publish": document.publish
-        }
-
-        data.update({"templateId": document.template_id}) if document.template else None
-
-        return self.client.post(
-            method=method,
-            data=data
-        )
+        raise NotImplementedError

@@ -43,6 +43,7 @@ class Client:
             endpoint: str,
             params: Optional[Dict] = None,
             data: Optional[Dict] = None,
+            files: Optional[Dict] = None,
             **kwargs
     ) -> Any:
         try:
@@ -51,6 +52,7 @@ class Client:
                 url=endpoint,
                 params=params,
                 json=data,
+                files=files,
                 **kwargs
             )
             response.raise_for_status()
