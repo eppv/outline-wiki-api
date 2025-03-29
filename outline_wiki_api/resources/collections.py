@@ -1,9 +1,15 @@
 
 from typing import Optional
-from outline_wiki_api.resources.base import Resources
+from .base import Resources
 
 
 class Collections(Resources):
+    """
+    `Collections` represent grouping of documents in the knowledge base, they
+    offer a way to structure information in a nested hierarchy and a level
+    at which read and write permissions can be granted to individual users or
+    groups of users.
+    """
     _path: str = 'collections'
 
     def list(self,

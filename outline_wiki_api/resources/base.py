@@ -23,15 +23,5 @@ class Resources:
         )
         return response
 
-    def info(self, data: Optional[Dict] = None):
-        """
-        Retrieve an entity
-        :return:
-        """
-        endpoint = f'/{self._path}.info'
-        return self.post(
-            endpoint=endpoint,
-            data=data
-        )
 
 

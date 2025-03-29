@@ -1,6 +1,11 @@
 from datetime import datetime
-from outline_wiki_api.resources.base import Resources
+from .base import Resources
 
 
 class Users(Resources):
+    """
+    `Users` represent an individual with access to the knowledge base. Users
+    can be created automatically when signing in with SSO or when a user is
+    invited via email.
+    """
     _path: str = 'users'

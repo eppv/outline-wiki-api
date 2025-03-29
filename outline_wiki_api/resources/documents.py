@@ -1,12 +1,16 @@
 
 from typing import Optional
-
-from outline_wiki_api.resources.base import Resources
-
-from ..models import Document
+from .base import Resources
+from ..models.various import Document
 
 
 class Documents(Resources):
+    """
+    `Documents` are what everything else revolves around. A document represents
+    a single page of information and always returns the latest version of the
+    content. Documents are stored in [Markdown](https://spec.commonmark.org/)
+    formatting.
+    """
     _path: str = 'documents'
 
     def list(self,
