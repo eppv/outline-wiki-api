@@ -1,36 +1,33 @@
-import json
-import requests
-from outline_wiki_api import utils
-from outline_wiki_api.models import (
-    auth,
-    users,
-    documents,
-    collections
-)
-from typing import Optional
+import httpx
+from typing import Optional, Dict, Any
+from .exceptions import OutlineAPIError, OutlineAuthenticationError
 
 
-class OutlineWiki:
+class Client:
 
     def __init__(
             self,
             url: Optional[str] = None,
             token: Optional[str] = None,
+            timeout: float = 30.0,
             ssl_verify: Optional[bool] = None
     ) -> None:
-        self._base_url = utils.get_base_url(url)
+        self._base_url = url
         self._url = f'{self._base_url}/api'
         self._token = token
-        self.ssl_verify = ssl_verify
-        self.headers = {
-            'Authorization': f'Bearer {self.token}',
+        self._timeout = timeout
+        self._ssl_verify = ssl_verify
+        self._headers = {
+            'Authorization': f'Bearer {self._token}',
             'Content-type': 'application/json',
             'Accept': 'application/json'
         }
-        self.auth = auth.Auth(client=self)
-        self.users = users.Users(client=self)
-        self.collections = collections.Collections(client=self)
-        self.documents = documents.Documents(client=self)
+        self._client = httpx.Client(
+            base_url=self._url,
+            headers=self._headers,
+            timeout=self._timeout,
+            verify=self._ssl_verify
+        )
 
     @property
     def url(self):
@@ -40,23 +37,41 @@ class OutlineWiki:
     def api_url(self):
         return self._url
 
-    @property
-    def token(self):
-        return self._token
-
-    def post(self,
-             method: str,
-             data: Optional[dict] = None,
-             params: Optional[dict] = None,
-             **kwargs) -> requests.Response:
-        request_url = f'{self._url}/{method}'
-        print(request_url)
-        result = requests.post(
-            url=request_url,
-            json=data,
-            params=params,
-            headers=self.headers,
+    def request(
+            self,
+            method: str,
+            endpoint: str,
+            params: Optional[Dict] = None,
+            data: Optional[Dict] = None,
+            files: Optional[Dict] = None,
             **kwargs
-        )
-        return result
+    ) -> Any:
+        try:
+            response = self._client.request(
+                method=method,
+                url=endpoint,
+                params=params,
+                json=data,
+                files=files,
+                **kwargs
+            )
+            response.raise_for_status()
+            return response
+        except httpx.HTTPStatusError as e:
+            if e.response.status_code == 401:
+                raise OutlineAuthenticationError("Invalid API key") from e
+            raise OutlineAPIError(
+                f'API request failed: {e.response.text}', status_code=e.response.status_code
+            ) from e
+        except httpx.RequestError as e:
+            raise OutlineAPIError(f'Request failed: {str(e)}') from e
+
+    def close(self):
+        self._client.close()
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.close()
 
