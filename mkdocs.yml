@@ -1,4 +1,48 @@
 site_name: Outline Wiki Python API
 nav:
   - Home: index.md
+  - Usage: usage.md
   - Contacts: contacts.md
+
+theme:
+  name: material
+  features:
+    - navigation.tabs
+    - navigation.indexes
+    - toc.integrate
+    - content.code.copy
+    - content.code.annotate
+  icon:
+    logo: simple/outline
+  palette:
+    # Dark Mode
+    - scheme: slate
+      toggle:
+        icon: material/weather-sunny
+        name: Dark Mode
+      primary: blue
+      accent: deep purple
+
+    # Light Mode
+    - scheme: default
+      toggle:
+        icon: material/weather-night
+        name: Light Mode
+      primary: blue
+      accent: deep purple
+
+markdown_extensions:
+  - attr_list
+  - admonition
+  - pymdownx.details
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+
+copyright: Copyright &copy; 2025 Eugene Popov
