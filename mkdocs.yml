@@ -44,3 +44,5 @@ markdown_extensions:
   - pymdownx.superfences
   - pymdownx.tabbed:
       alternate_style: true
+
+copyright: Copyright &copy; 2025 Eugene Popov
