@@ -7,6 +7,7 @@ For full Outline API documentation visit [Outline Developers page](https://www.g
 > Relevant for version [0.82.0](https://github.com/outline/outline/releases/tag/v0.82.0)
 
 ---
+
 ## Installation
 
 ```bash
@@ -60,7 +61,3 @@ for result in search_results:
     print(f"context: {result.context}")
     print(f"document: {result.document}")
 ```
-
----
-# Contacts
-Feel free [to contact me](mailto:evgeniypalych@gmail.com) if you want to improve this lib.
