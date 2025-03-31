@@ -7,6 +7,7 @@ For full Outline API documentation visit [Outline Developers page](https://www.g
 > Relevant for version [0.82.0](https://github.com/outline/outline/releases/tag/v0.82.0)
 
 ---
+
 ## Installation
 
 ```bash
@@ -14,8 +15,7 @@ python3 -m pip install outline-wiki-api
 ```
 
 ---
-
-## Usage
+## Basic usage
 
 ### Creating a new document
 
@@ -61,11 +61,3 @@ for result in search_results:
     print(f"context: {result.context}")
     print(f"document: {result.document}")
 ```
-
----
-
-# License
-
-This project is a wrapper, not affiliated with Outline.
-Outline itself is [BSL 1.1 licensed](https://github.com/outline/outline/blob/main/LICENSE).
-Use of Outline’s API via this wrapper must comply with Outline's licensing terms.

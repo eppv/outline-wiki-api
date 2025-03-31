@@ -1,0 +1,4 @@
+site_name: Outline Wiki Python API
+nav:
+  - Home: index.md
+  - Contacts: contacts.md
