@@ -67,5 +67,7 @@ for result in search_results:
 # License
 
 This project is a wrapper, not affiliated with Outline.
+
 Outline itself is [BSL 1.1 licensed](https://github.com/outline/outline/blob/main/LICENSE).
+
 Use of Outline’s API via this wrapper must comply with Outline's licensing terms.
