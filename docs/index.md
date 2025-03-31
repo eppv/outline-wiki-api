@@ -15,7 +15,7 @@ python3 -m pip install outline-wiki-api
 ```
 
 ---
-## Usage
+## Basic usage
 
 ### Creating a new document
 
