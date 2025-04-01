@@ -1,4 +1,6 @@
 site_name: Outline Wiki Python API
+repo_url: https://github.com/eppv/outline-wiki-api
+repo_name: eppv/outline-wiki-api
 nav:
   - Home: index.md
   - Usage: usage.md
@@ -8,10 +10,15 @@ theme:
   name: material
   features:
     - navigation.tabs
+    - navigation.expand
     - navigation.indexes
+    - navigation.top
     - toc.integrate
+    - toc.follow
     - content.code.copy
     - content.code.annotate
+    - search.suggest
+    - search.share
   icon:
     logo: simple/outline
   palette:
@@ -20,16 +27,16 @@ theme:
       toggle:
         icon: material/weather-sunny
         name: Dark Mode
-      primary: blue
-      accent: deep purple
+      primary: black
+      accent: amber
 
     # Light Mode
     - scheme: default
       toggle:
         icon: material/weather-night
         name: Light Mode
-      primary: blue
-      accent: deep purple
+      primary: white
+      accent: orange
 
 markdown_extensions:
   - attr_list
@@ -44,5 +51,20 @@ markdown_extensions:
   - pymdownx.superfences
   - pymdownx.tabbed:
       alternate_style: true
+
+plugins:
+  - search:
+      lang:
+        - en
+        - ru
+
+extra:
+  consent:
+    title: Cookie consent
+    description: >- 
+      We use cookies to recognize your repeated visits and preferences, as well
+      as to measure the effectiveness of our documentation and whether users
+      find what they're searching for. With your consent, you're helping us to
+      make our documentation better.
 
 copyright: Copyright &copy; 2025 Eugene Popov

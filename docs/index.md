@@ -1,6 +1,6 @@
 # Outline Wiki Python API
 
-A minimalist library providing python API for [Outline](https://www.getoutline.com) knowledge base platform.
+A python wrapper for [Outline](https://www.getoutline.com) knowledge base platform API.
 
 !!! info
     For full Outline API documentation visit [Outline Developers page](https://www.getoutline.com/developers).
