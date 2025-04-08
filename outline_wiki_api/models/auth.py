@@ -1,12 +1,12 @@
 from pydantic import BaseModel, Field
-from typing import Optional, List
+from typing import Optional, List, Union
 
-from .response import Policy
+from .response import Policy, Response
 from .user import User
 from .team import Team
 
 
-class AuthData(BaseModel):
+class AuthInfoData(BaseModel):
     """
     Authentication data for the current API key
     """
@@ -16,14 +16,21 @@ class AuthData(BaseModel):
     group_users: Optional[List] = Field(..., alias="groupUsers")
     collaboration_token: str = Field(..., alias="collaborationToken")
     available_teams: Optional[List] = Field(..., alias="availableTeams")
+    token: Optional[str] = Field(None, description="Authentication token returned by login and register endpoints")
 
 
-class AuthInfo(BaseModel):
+class AuthConfigData(BaseModel):
     """
-    Authentication details for the current API key
+    Authentication options
     """
-    data: AuthData
-    policies: Optional[List[Policy]]
-    status: int
-    ok: bool
+    name: str
+    hostname: str
+    services: Optional[List]
+
+
+class AuthResponse(Response):
+    """
+    Authentication details response for the current API key
+    """
+    data: Optional[Union[AuthInfoData, AuthConfigData]]
 

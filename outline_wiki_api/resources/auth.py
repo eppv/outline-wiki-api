@@ -1,6 +1,5 @@
-
 from .base import Resources
-from ..models.auth import AuthInfo
+from ..models.auth import AuthResponse
 from ..models.user import User
 from ..models.team import Team
 
@@ -17,13 +16,13 @@ class Auth(Resources):
         super().__init__(client)
         self._user_id = None
 
-    def info(self) -> AuthInfo:
+    def info(self) -> AuthResponse:
         """
         Retrieve authentication info
         :return:
         """
         response = self.post(endpoint="info").json()
-        return AuthInfo(**response)
+        return AuthResponse(**response)
 
     def config(self):
         """
