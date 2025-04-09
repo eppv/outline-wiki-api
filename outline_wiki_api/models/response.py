@@ -46,7 +46,7 @@ class Response(BaseModel):
     status: int
     ok: bool
     data: Optional[Any]
-    pagination: Optional[Pagination]
+    pagination: Optional[Pagination] = None
     policies: Optional[List[Policy]]
 
 
