@@ -1,7 +1,7 @@
 from pydantic import BaseModel, Field
 from typing import Optional, List, Union
 
-from .response import Policy, Response
+from .response import Response
 from .user import User
 from .team import Team
 

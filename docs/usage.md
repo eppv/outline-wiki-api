@@ -93,11 +93,12 @@ You can do all kinds of stuff with it using the API.
 
     app = OutlineWiki()
 
-    file = 'path/to/some_markdown_document.md' # (1)
-    my_collection_id = "ff3c58ac-f134-46b2-8601-876dc494044a"
+    my_collection_id = "ff3c58ac-f134-46b2-8601-876dc494044a" # (1)
+    my_file = 'path/to/some_markdown_document.md' # (2)
 
-    document = app.documents.import_file(file=imported_file, collection_id=test_coll_id) # (2)
+    document = app.documents.import_file(file=my_file, collection_id=my_collection_id) # (3)
     ```
 
-    1. Plain text, markdown, docx, csv, tsv, and html file formats are supported for import.
-    2. You can also pass a file object to the file argument, intended for transmission as part of a `multipart/form-data` request. You can create such an object yourself, or using the function `outline_wiki_api.utils.get_file_object_for_import`.
+    1. `collection_id` is essential argument. It points to the collection where the imported document will be created.
+    2. Plain text, markdown, docx, csv, tsv, and html file formats are supported for import.
+    3. You can also pass a file object to the file argument, intended for transmission as part of a `multipart/form-data` request. You can create such an object yourself, or using the function `outline_wiki_api.utils.get_file_object_for_import`.
