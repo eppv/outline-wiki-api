@@ -1,10 +1,11 @@
-
 from datetime import datetime
-from typing import Optional, List
+from typing import Optional, List, Literal
 from pydantic import BaseModel, Field
 from uuid import UUID
 from .user import User
 from .response import Response
+from .collection import Collection
+from .membership import Membership
 
 
 class DocumentTasks(BaseModel):
@@ -176,4 +177,81 @@ class DocumentSearchResult(BaseModel):
 
 class DocumentSearchResultResponse(Response):
     data: Optional[List[DocumentSearchResult]]
+
+
+class SearchResult(BaseModel):
+    """
+    Represents a search result with answer and metadata
+    """
+    id: UUID = Field(
+        ...,
+        description="Unique identifier for the search result",
+        read_only=True
+    )
+    query: str = Field(
+        ...,
+        description="The user-provided search query",
+        example="What is our hiring policy?",
+        read_only=True
+    )
+    answer: str = Field(
+        ...,
+        description="An answer to the query, if possible",
+        example="Our hiring policy can be summarized as…",
+        read_only=True
+    )
+    source: Literal["api", "app"] = Field(
+        ...,
+        description="The source of the query",
+        example="app",
+        read_only=True
+    )
+    created_at: datetime = Field(
+        ...,
+        alias="createdAt",
+        description="The date and time that this object was created",
+        read_only=True
+    )
+
+
+class DocumentResponse(Response):
+    data: Optional[Document]
+
+
+class DocumentAnswerResponse(Response):
+    """
+    Response from natural language query of documents
+    """
+    documents: List[Document]
+    search: SearchResult
+
+
+class DocumentMoveResponse(BaseModel):
+    """
+    Response from moving a document
+    """
+    documents: List[Document]
+    collections: List[Collection]
+
+
+class DocumentUsersResponse(Response):
+    """
+    Response listing users with access to a document
+    """
+    data: List[User]
+
+
+class DocumentMemberships(BaseModel):
+    users: List[User]
+    memberships: List[Membership]
+
+
+class DocumentMembershipsResponse(Response):
+    """
+    Response listing direct memberships to a document
+    """
+    data: dict = Field(
+        ...,
+        description="Contains users and their memberships"
+    )
 
