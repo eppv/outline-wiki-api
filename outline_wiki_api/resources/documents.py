@@ -1,6 +1,6 @@
 
 from io import BufferedReader
-from typing import Optional, Dict, Union, Literal, List
+from typing import Optional, Dict, Union, Literal, Tuple
 from uuid import UUID
 from .base import Resources
 from ..models.response import Pagination, Sort
@@ -14,6 +14,7 @@ from ..models.document import (
     DocumentUsersResponse,
     DocumentMembershipsResponse
 )
+from ..utils import get_file_object_for_import
 
 
 class Documents(Resources):
@@ -44,7 +45,7 @@ class Documents(Resources):
 
     def import_file(
             self,
-            file: BufferedReader,
+            file: Union[str, Tuple],
             collection_id: Union[UUID, str],
             parent_document_id: Optional[Union[UUID, str]] = None,
             template: bool = False,
@@ -54,16 +55,20 @@ class Documents(Resources):
         Import a file as a new document
 
         Args:
-            file: File object to import (Plain text, markdown, docx, csv, tsv, and html format are supported.)
+            file: Path to a file OR File Object for import (Plain text, markdown, docx, csv, tsv, and html format are supported.)
             collection_id: Target collection ID
             parent_document_id: Optional parent document ID
             template: Whether to create as template
             publish: Whether to publish immediately
         Returns:
-            Document: The created document
+            The created document
         """
+        if isinstance(file, str):
+            file_object = get_file_object_for_import(file)
+        else:
+            file_object = file
         files = {
-            "file": file,
+            "file": file_object,
             "collectionId": (None, str(collection_id)),
         }
         if parent_document_id:

@@ -38,6 +38,7 @@ for result in search_results:
 ```
 
 You can find more usage examples [in the docs](https://eppv.github.io/outline-wiki-api).
+
 [![Built with Material for MkDocs](https://img.shields.io/badge/Material_for_MkDocs-526CFE?style=for-the-badge&logo=MaterialForMkDocs&logoColor=white)](https://squidfunk.github.io/mkdocs-material/)
 
 ---
