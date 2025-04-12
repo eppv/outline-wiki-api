@@ -12,7 +12,7 @@ class OutlineWiki:
             self,
             token: Optional[str] = None,
             url: Optional[str] = None,
-            logging_level: int = logging.INFO
+            logging_level: int = logging.WARNING
     ) -> None:
         self.url = get_base_url(url)
         self._token = get_token(token)
