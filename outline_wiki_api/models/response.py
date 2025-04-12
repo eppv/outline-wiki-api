@@ -38,16 +38,16 @@ class Pagination(BaseModel):
     next_path: Optional[str] = Field(
         None,
         alias="nextPath"
-    ),
-    total: Optional[int]
+    )
+    total: Optional[int] = None
 
 
 class Response(BaseModel):
     status: int
     ok: bool
-    data: Optional[Any]
+    data: Optional[Any] = None
     pagination: Optional[Pagination] = None
-    policies: Optional[List[Policy]]
+    policies: Optional[List[Policy]] = None
 
 
 
