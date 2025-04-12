@@ -4,8 +4,11 @@ A python wrapper for [Outline](https://www.getoutline.com) knowledge base platfo
 
 For full Outline API documentation visit [Outline Developers page](https://www.getoutline.com/developers).
 
-> [!WARNING]
+> [!NOTE]
 > Relevant for Outline version [0.82.0](https://github.com/outline/outline/releases/tag/v0.82.0)
+
+> [!IMPORTANT]
+> The main branch may be in an unstable or even broken state during development. For stable versions, see releases.
 
 ---
 ## Installation
@@ -50,3 +53,5 @@ This library is a wrapper, not affiliated with Outline.
 Outline itself is [BSL 1.1 licensed](https://github.com/outline/outline/blob/main/LICENSE).
 
 Use of Outline’s API via this wrapper must comply with Outline's licensing terms.
+
+The original code of the wrapper is under the Apache 2.0 license. See the []LICENSE](https://github.com/eppv/outline-wiki-api/blob/main/LICENSE) file for details.
