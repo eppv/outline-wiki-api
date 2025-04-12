@@ -4,9 +4,8 @@ site_name: Outline Wiki Python API
 repo_url: https://github.com/eppv/outline-wiki-api
 repo_name: eppv/outline-wiki-api
 nav:
-  - Home:
-    - home/index.md
-    - Usage: home/usage.md
+  - Home: index.md
+  - Usage: usage.md
   - Reference:
     - Resources:
       - reference/resources/resources.md
