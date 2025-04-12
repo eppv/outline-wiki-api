@@ -60,6 +60,7 @@ class Documents(Resources):
             parent_document_id: Optional parent document ID
             template: Whether to create as template
             publish: Whether to publish immediately
+
         Returns:
             The created document
         """

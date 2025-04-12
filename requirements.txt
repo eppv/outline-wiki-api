@@ -2,3 +2,8 @@
 httpx~=0.28.0
 pydantic~=2.10.0
 pydantic[email]
+
+# docs
+mkdocs
+mkdocs-material
+mkdocstrings[python]
