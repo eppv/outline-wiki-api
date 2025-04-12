@@ -54,4 +54,4 @@ Outline itself is [BSL 1.1 licensed](https://github.com/outline/outline/blob/mai
 
 Use of Outline’s API via this wrapper must comply with Outline's licensing terms.
 
-The original code of the wrapper is under the Apache 2.0 license. See the []LICENSE](https://github.com/eppv/outline-wiki-api/blob/main/LICENSE) file for details.
+The original code of the wrapper is under the Apache 2.0 license. See the [LICENSE](https://github.com/eppv/outline-wiki-api/blob/main/LICENSE) file for details.
