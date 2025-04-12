@@ -1,6 +1,9 @@
 import httpx
+import logging
 from typing import Optional, Dict, Any
 from .exceptions import OutlineAPIError, OutlineAuthenticationError
+
+log = logging.getLogger(__name__)
 
 
 class Client:
@@ -18,9 +21,7 @@ class Client:
         self._timeout = timeout
         self._ssl_verify = ssl_verify
         self._headers = {
-            'Authorization': f'Bearer {self._token}',
-            'Content-type': 'application/json',
-            'Accept': 'application/json'
+            'Authorization': f'Bearer {self._token}'
         }
         self._client = httpx.Client(
             base_url=self._url,
@@ -55,6 +56,8 @@ class Client:
                 files=files,
                 **kwargs
             )
+            log.debug(f"Request headers: {response.request.headers}")
+            log.debug(f"Request content: {response.request.read()}")
             response.raise_for_status()
             return response
         except httpx.HTTPStatusError as e:

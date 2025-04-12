@@ -1,3 +1,4 @@
+import logging
 from typing import Optional
 from .client import Client
 from .utils import get_base_url, get_token
@@ -10,7 +11,8 @@ class OutlineWiki:
     def __init__(
             self,
             token: Optional[str] = None,
-            url: Optional[str] = None
+            url: Optional[str] = None,
+            logging_level: int = logging.INFO
     ) -> None:
         self.url = get_base_url(url)
         self._token = get_token(token)
@@ -19,6 +21,7 @@ class OutlineWiki:
         self.documents = Documents(self._client)
         self.collections = Collections(self._client)
         # TODO: Add other resources here
+        logging.basicConfig(level=logging_level, format="%(asctime)s - %(name)s: %(levelname)s: %(message)s")
 
     def close(self):
         self._client.close()

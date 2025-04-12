@@ -1,13 +1,17 @@
-
 from datetime import datetime
-from typing import Optional, List
+from typing import Optional, List, Literal
 from pydantic import BaseModel, Field
 from uuid import UUID
 from .user import User
 from .response import Response
+from .collection import Collection
+from .membership import Membership
 
 
 class DocumentTasks(BaseModel):
+    """
+    Tiny structure for storing the statistics of checklist points in document
+    """
     completed: int
     total: int
 
@@ -21,15 +25,19 @@ class Document(BaseModel):
     """
     id: UUID = Field(
         ...,
-        description="Unique identifier for the object",
-        read_only=True,
-        example="550e8400-e29b-41d4-a716-446655440000"
+        json_schema_extra={
+            "description": "Unique identifier for the object",
+            "example": "550e8400-e29b-41d4-a716-446655440000",
+            "read_only": "true"
+        }
     )
     collection_id: UUID = Field(
         ...,
         alias='collectionId',
-        description="Identifier for the associated collection",
-        example="123e4567-e89b-12d3-a456-426614174000"
+        json_schema_extra={
+            "description": "Identifier for the associated collection",
+            "example": "123e4567-e89b-12d3-a456-426614174000"
+        }
     )
     parent_document_id: Optional[UUID] = Field(
         None,
@@ -165,15 +173,97 @@ class Document(BaseModel):
 
 
 class DocumentListResponse(Response):
+    """A Collection of the Document objects"""
     data: Optional[List[Document]]
 
 
 class DocumentSearchResult(BaseModel):
+    """Data model for the full-text search result"""
     ranking: float
     context: str
     document: Document
 
 
+class DocumentAnswer(BaseModel):
+    """
+    Represents a result of the LLM request containing answer and metadata
+    """
+    id: UUID = Field(
+        ...,
+        description="Unique identifier for the search result",
+        read_only=True
+    )
+    query: str = Field(
+        ...,
+        description="The user-provided request (usually question)",
+        example="What is our hiring policy?",
+        read_only=True
+    )
+    answer: str = Field(
+        ...,
+        description="An answer to the query, if possible",
+        example="Our hiring policy can be summarized as…",
+        read_only=True
+    )
+    source: Literal["api", "app"] = Field(
+        ...,
+        description="The source of the query",
+        example="app",
+        read_only=True
+    )
+    created_at: datetime = Field(
+        ...,
+        alias="createdAt",
+        description="The date and time that this object was created",
+        read_only=True
+    )
+
+
 class DocumentSearchResultResponse(Response):
+    """Full-text search response data model"""
     data: Optional[List[DocumentSearchResult]]
+
+
+
+class DocumentResponse(Response):
+    """"""
+    data: Optional[Document]
+
+
+class DocumentAnswerResponse(Response):
+    """
+    Response from natural language query of documents
+    """
+    documents: List[Document]
+    search: DocumentAnswer
+
+
+class DocumentMoveResponse(BaseModel):
+    """
+    Response from moving a document
+    """
+    documents: List[Document]
+    collections: List[Collection]
+
+
+class DocumentUsersResponse(Response):
+    """
+    Response listing users with access to a document
+    """
+    data: List[User]
+
+
+class DocumentMemberships(BaseModel):
+    users: List[User]
+    memberships: List[Membership]
+
+
+class DocumentMembershipsResponse(Response):
+    """
+    Response listing direct memberships to a document
+    """
+    data: DocumentMemberships = Field(
+        ...,
+        description="Contains users and their memberships"
+    )
 

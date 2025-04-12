@@ -1,3 +1,6 @@
+"""
+Basic API data structures
+"""
 
 from uuid import UUID
 from pydantic import BaseModel, Field
@@ -20,6 +23,9 @@ class Policy(BaseModel):
 
 
 class Sort(BaseModel):
+    """
+    Sorting data model used to configure the order of results obtained in methods that return arrays.
+    """
     field: str = Field(
         ...,
         description="Field to sort documents by",
@@ -33,21 +39,27 @@ class Sort(BaseModel):
 
 
 class Pagination(BaseModel):
+    """
+    Pagination data model used to configure the number of results obtained in methods that return arrays.
+    """
     offset: int
     limit: int
     next_path: Optional[str] = Field(
         None,
         alias="nextPath"
-    ),
-    total: Optional[int]
+    )
+    total: Optional[int] = None
 
 
 class Response(BaseModel):
+    """
+    Base Outline API response data structure
+    """
     status: int
     ok: bool
-    data: Optional[Any]
-    pagination: Optional[Pagination]
-    policies: Optional[List[Policy]]
+    data: Optional[Any] = None
+    pagination: Optional[Pagination] = None
+    policies: Optional[List[Policy]] = None
 
 
 

@@ -1,6 +1,6 @@
-
+import httpx
 from .base import Resources
-from ..models.auth import AuthInfo
+from ..models.auth import AuthResponse
 from ..models.user import User
 from ..models.team import Team
 
@@ -17,18 +17,24 @@ class Auth(Resources):
         super().__init__(client)
         self._user_id = None
 
-    def info(self) -> AuthInfo:
+    def info(self) -> AuthResponse:
         """
         Retrieve authentication info
-        :return:
+
+        Returns:
+            AuthResponse object containing the workspace and user info for the current authentication session
         """
         response = self.post(endpoint="info").json()
-        return AuthInfo(**response)
+        return AuthResponse(**response)
 
-    def config(self):
+    def config(self) -> httpx.Response:
         """
         Retrieve authentication options
-        :return:
+
+        Args:
+
+        Returns:
+            httpx Response object containing configuration of the authentication service provider for the current authentication session
         """
         endpoint = "config"
         return self.post(endpoint=endpoint)
