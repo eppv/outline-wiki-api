@@ -1,12 +1,8 @@
-import pytest
 from unittest.mock import Mock
 from uuid import uuid4
-from datetime import datetime
-from outline_wiki_api.resources.auth import Auth
 from outline_wiki_api.models.auth import AuthResponse
-from outline_wiki_api.models.user import User, UserRole
+from outline_wiki_api.models.user import User
 from outline_wiki_api.models.team import Team
-from outline_wiki_api.models.response import Policy, Pagination
 
 
 def test_info(auth_resource, mock_client):
@@ -225,4 +221,4 @@ def test_get_current_team(auth_resource, mock_client):
         data=None,
         params=None,
         files=None
-    ) 
+    )
