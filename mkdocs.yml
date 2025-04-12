@@ -7,7 +7,12 @@ nav:
   - Home: index.md
   - Usage: usage.md
   - Reference:
-    - resources: reference/resources.md
+    - Resources:
+      - reference/resources/resources.md
+      - Auth: reference/resources/auth.md
+      - Documents: reference/resources/documents.md
+      - Collections: reference/resources/collections.md
+    - Models: reference/models.md
   - Contacts: contacts.md
 
 theme:
@@ -17,7 +22,7 @@ theme:
     - navigation.expand
     - navigation.indexes
     - navigation.top
-    - toc.integrate
+    # - toc.integrate
     - toc.follow
     - content.code.copy
     - content.code.annotate
@@ -68,7 +73,14 @@ plugins:
         python:
           options:
             show_source: false
-            show_root_heading: true
+            show_root_heading: false
+            show_root_full_path: false
+            show_root_members_full_path: true
+            group_by_category: true
+            show_category_heading: true
+            annotations_path: full
+            show_signature: false
+            show_submodules: true
 
 extra:
   consent:

@@ -9,6 +9,9 @@ from .membership import Membership
 
 
 class DocumentTasks(BaseModel):
+    """
+    Tiny structure for storing the statistics of checklist points in document
+    """
     completed: int
     total: int
 
@@ -22,15 +25,19 @@ class Document(BaseModel):
     """
     id: UUID = Field(
         ...,
-        description="Unique identifier for the object",
-        read_only=True,
-        example="550e8400-e29b-41d4-a716-446655440000"
+        json_schema_extra={
+            "description": "Unique identifier for the object",
+            "example": "550e8400-e29b-41d4-a716-446655440000",
+            "read_only": "true"
+        }
     )
     collection_id: UUID = Field(
         ...,
         alias='collectionId',
-        description="Identifier for the associated collection",
-        example="123e4567-e89b-12d3-a456-426614174000"
+        json_schema_extra={
+            "description": "Identifier for the associated collection",
+            "example": "123e4567-e89b-12d3-a456-426614174000"
+        }
     )
     parent_document_id: Optional[UUID] = Field(
         None,
@@ -166,22 +173,20 @@ class Document(BaseModel):
 
 
 class DocumentListResponse(Response):
+    """A Collection of the Document objects"""
     data: Optional[List[Document]]
 
 
 class DocumentSearchResult(BaseModel):
+    """Data model for the full-text search result"""
     ranking: float
     context: str
     document: Document
 
 
-class DocumentSearchResultResponse(Response):
-    data: Optional[List[DocumentSearchResult]]
-
-
-class SearchResult(BaseModel):
+class DocumentAnswer(BaseModel):
     """
-    Represents a search result with answer and metadata
+    Represents a result of the LLM request containing answer and metadata
     """
     id: UUID = Field(
         ...,
@@ -190,7 +195,7 @@ class SearchResult(BaseModel):
     )
     query: str = Field(
         ...,
-        description="The user-provided search query",
+        description="The user-provided request (usually question)",
         example="What is our hiring policy?",
         read_only=True
     )
@@ -214,7 +219,14 @@ class SearchResult(BaseModel):
     )
 
 
+class DocumentSearchResultResponse(Response):
+    """Full-text search response data model"""
+    data: Optional[List[DocumentSearchResult]]
+
+
+
 class DocumentResponse(Response):
+    """"""
     data: Optional[Document]
 
 
@@ -223,7 +235,7 @@ class DocumentAnswerResponse(Response):
     Response from natural language query of documents
     """
     documents: List[Document]
-    search: SearchResult
+    search: DocumentAnswer
 
 
 class DocumentMoveResponse(BaseModel):
@@ -250,7 +262,7 @@ class DocumentMembershipsResponse(Response):
     """
     Response listing direct memberships to a document
     """
-    data: dict = Field(
+    data: DocumentMemberships = Field(
         ...,
         description="Contains users and their memberships"
     )

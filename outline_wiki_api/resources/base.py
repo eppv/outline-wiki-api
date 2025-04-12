@@ -8,6 +8,7 @@ from ..client import Client
 class Resources:
     """
     The base parent class for API resources.
+    It has no practical use by itself.
     """
     _path: str
 
@@ -25,7 +26,7 @@ class Resources:
         All Outline API endpoints currently accept only POST requests.
 
         Args:
-            endpoint: The short part of the endpoint, consisting of the name of the target resource and the method being called.
+            endpoint: The last part of the endpoint URL, the name of the method being called.
             params: POST-request parameters (It is practically not used in this API.)
             data: Data payload for request with `application/json` content type (most endpoints).
             files: Data payload for requests with `multipart/form-data` content type.

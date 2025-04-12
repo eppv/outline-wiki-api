@@ -1,3 +1,7 @@
+"""
+Data structures for Authentication resource information and responses
+"""
+
 from pydantic import BaseModel, Field
 from typing import Optional, List, Union
 

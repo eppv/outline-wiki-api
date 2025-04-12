@@ -35,7 +35,7 @@ class Documents(Resources):
             share_id: Optional share identifier
 
         Returns:
-            The requested document
+            Document: The requested document
         """
         data = {"id": doc_id}
         if share_id:
@@ -62,7 +62,7 @@ class Documents(Resources):
             publish: Whether to publish immediately
 
         Returns:
-            The created document
+            Document: The created document
         """
         if isinstance(file, str):
             file_object = get_file_object_for_import(file)
@@ -112,9 +112,19 @@ class Documents(Resources):
         """
         List all published and user's draft documents
 
+        Args:
+            collection_id: Optionally filter to a specific collection
+            user_id: Optionally filter to a specific user
+            backlink_document_id: Optionally filter to a specific document in a backlinks
+            parent_document_id: Optionally filter to a specific parent document
+            template: Optionally filter to only templates
+            pagination: Custom pagination (default: offset=0, limit=25)
+            sorting: Custom sorting order (takes `Sort` object)
+
         Returns:
-            Dict: Contains data (documents), policies, and pagination info
+            DocumentList: Contains data (documents), policies, and pagination info
         """
+
         data = {}
         if collection_id:
             data["collectionId"] = str(collection_id)
@@ -178,16 +188,24 @@ class Documents(Resources):
     def search(
             self,
             query: str,
-            user_id: Optional[Union[UUID, str]] = None,
             collection_id: Optional[Union[UUID, str]] = None,
+            user_id: Optional[Union[UUID, str]] = None,
             document_id: Optional[Union[UUID, str]] = None,
             status_filter: Optional[Literal["draft", "archived", "published"]] = None,
             date_filter: Optional[Literal["day", "week", "month", "year"]] = None,
-            pagination: Optional[Pagination] = None
+            pagination: Optional[Union[Pagination, Dict]] = None
     ) -> DocumentSearchResultResponse:
         """
-        Search documents with keywords
+        Full-text search feature. Use of keywords is most effective.
 
+        Args:
+            query: Full-text search query
+            collection_id: Optionally filter to a specific collection
+            user_id: Optionally filter to a specific editor user
+            document_id: You also can just put the id of the document to search within
+            status_filter: Any documents that are not in the specified status will be filtered out
+            date_filter: Any documents that have not been updated within the specified period will be filtered out
+            pagination: Custom pagination (default: offset=0, limit=25)
         Returns:
             Response: Contains search results, policies, and pagination info
         """
@@ -203,7 +221,10 @@ class Documents(Resources):
         if date_filter:
             data["dateFilter"] = date_filter
         if pagination:
-            data.update(pagination.dict())
+            if isinstance(pagination, Pagination):
+                data.update(pagination.dict())
+            elif isinstance(pagination, Dict):
+                data.update(pagination)
 
         response = self.post("search", data=data)
 
@@ -226,7 +247,7 @@ class Documents(Resources):
             sorting: Sorting parameters
 
         Returns:
-            DocumentListResponse: List of draft documents
+            DocumentList: List of draft documents
         """
         data = {}
         if collection_id:
@@ -252,9 +273,8 @@ class Documents(Resources):
         Args:
             pagination: Pagination parameters
             sorting: Sorting parameters
-
         Returns:
-            DocumentListResponse: List of recently viewed documents
+            DocumentList: List of recently viewed documents
         """
         data = {}
         if pagination:
