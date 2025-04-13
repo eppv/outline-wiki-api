@@ -46,7 +46,7 @@ You can find more usage examples [in the docs](https://eppv.github.io/outline-wi
 ### Community Tools & Examples
 
 The following third-party scripts/extensions use `outline-wiki-api` and may be useful for specific workflows:
-* [Outline -> RAGFlow Sync Tool](https://github.com/metorm/ragflow-sync) - a tool sync documents between Outline and RAGFlow (made by @metorm)
+* [Outline -> RAGFlow Sync Tool](https://github.com/metorm/ragflow-sync) - a tool sync documents between Outline and RAGFlow (made by [@metorm](https://github.com/metorm))
 
 > [!NOTE]
 > These tools are maintained by the community and not part of the core `outline-wiki-api` project.
