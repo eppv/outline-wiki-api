@@ -25,7 +25,7 @@ class Collections(Resources):
         List all collections
 
         Args:
-            query: Optional name filter
+            query: If set, will filter the results by collection name.
             status_filter: Optional statuses to filter by
             pagination: Pagination options
             sorting: Sorting options
