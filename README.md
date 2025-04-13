@@ -26,23 +26,30 @@ Let's try to search a document in our knowledge base and look through the result
 ```python
 from outline_wiki_api import OutlineWiki
 
-# You can also set OUTLINE_URL and OUTLINE_TOKEN as environment variables
 OUTLINE_URL = "https://my.outline.com"
 OUTLINE_TOKEN = "mysecrettoken"
 
-app = OutlineWiki()
+app = OutlineWiki(url=OUTLINE_URL, token=OUTLINE_TOKEN)
 
 search_results = app.documents.search(query='outline').data
 
 for result in search_results:
-    print(f"ranking: {result.ranking}")
-    print(f"context: {result.context}")
-    print(f"document: {result.document}")
+    print(f"document_title: {result.document.title} | "
+          f"ranking: {result.ranking} | "
+          f"context: {result.context[0:20].replace('\n', ' ')}\n")
 ```
 
 You can find more usage examples [in the docs](https://eppv.github.io/outline-wiki-api).
 
 [![Built with Material for MkDocs](https://img.shields.io/badge/Material_for_MkDocs-526CFE?style=for-the-badge&logo=MaterialForMkDocs&logoColor=white)](https://squidfunk.github.io/mkdocs-material/)
+
+### Community Tools & Examples
+
+The following third-party scripts/extensions use `outline-wiki-api` and may be useful for specific workflows:
+* [Outline -> RAGFlow Sync Tool](https://github.com/metorm/ragflow-sync) - a tool sync documents between Outline and RAGFlow (made by @metorm)
+
+> [!NOTE]
+> These tools are maintained by the community and not part of the core `outline-wiki-api` project.
 
 ---
 
