@@ -12,7 +12,13 @@ nav:
       - Auth: reference/resources/auth.md
       - Documents: reference/resources/documents.md
       - Collections: reference/resources/collections.md
-    - Models: reference/models.md
+      - Users: reference/resources/users.md
+    - Models:
+      - reference/models/models.md
+      - Auth: reference/models/auth.md
+      - Document: reference/models/document.md
+      - Collection: reference/models/collection.md
+      - User: reference/models/user.md
   - Contacts: contacts.md
 
 theme:
@@ -75,12 +81,14 @@ plugins:
             show_source: false
             show_root_heading: false
             show_root_full_path: false
-            show_root_members_full_path: true
+            show_root_members_full_path: false
             group_by_category: true
             show_category_heading: true
             annotations_path: full
             show_signature: false
             show_submodules: true
+            extensions:
+              - griffe_pydantic: {schema: false}
 
 extra:
   consent:
