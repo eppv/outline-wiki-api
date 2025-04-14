@@ -54,10 +54,10 @@ You can do all kinds of stuff with it using the API.
     app = OutlineWiki()
     search_results = app.documents.search(query='outline').data # (1)
 
-    for result in search_results: # (2)
-        print(f"ranking: {result.ranking}")
-        print(f"context: {result.context}")
-        print(f"document: {result.document}")
+    for result in search_results:  # (2)
+    print(f"document_title: {result.document.title} | "
+          f"ranking: {result.ranking} | "
+          f"context: {result.context[0:20].replace('\n', ' ')}\n")
     ```
 
     1.  Execute the search query

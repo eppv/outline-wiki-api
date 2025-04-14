@@ -7,3 +7,4 @@ pydantic[email]
 mkdocs
 mkdocs-material
 mkdocstrings[python]
+griffe-pydantic

@@ -26,7 +26,7 @@ class Documents(Resources):
     """
     _path: str = "/documents"
 
-    def info(self, doc_id: str, share_id: Optional[UUID] = None) -> Document:
+    def info(self, doc_id: Union[str, UUID], share_id: Optional[Union[str, UUID]] = None) -> Document:
         """
         Retrieve a document by ID or shareId
 
@@ -37,7 +37,7 @@ class Documents(Resources):
         Returns:
             Document: The requested document
         """
-        data = {"id": doc_id}
+        data = {"id": str(doc_id)}
         if share_id:
             data["shareId"] = str(share_id)
         response = self.post("info", data=data)
