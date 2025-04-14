@@ -1,6 +1,6 @@
 from datetime import datetime
 from enum import Enum
-from typing import Optional, Dict
+from typing import Optional, Dict, List
 from uuid import UUID
 from pydantic import BaseModel, Field, EmailStr
 from .response import Response
@@ -105,3 +105,6 @@ class User(BaseModel):
 class UserResponse(Response):
     data: Optional[User] = None
 
+
+class UserListResponse(Response):
+    data: Optional[List[User]] = []

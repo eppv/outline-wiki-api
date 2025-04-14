@@ -87,6 +87,8 @@ plugins:
             annotations_path: full
             show_signature: false
             show_submodules: true
+            extensions:
+              - griffe_pydantic: {schema: false}
 
 extra:
   consent:
