@@ -172,11 +172,6 @@ class Document(BaseModel):
     )
 
 
-class DocumentListResponse(Response):
-    """A Collection of the Document objects"""
-    data: Optional[List[Document]]
-
-
 class DocumentSearchResult(BaseModel):
     """Data model for the full-text search result"""
     ranking: float
@@ -219,15 +214,21 @@ class DocumentAnswer(BaseModel):
     )
 
 
+class DocumentResponse(Response):
+    """
+    Response which contains a Document object as data
+    """
+    data: Optional[Document]
+
+
+class DocumentListResponse(Response):
+    """A Collection of the Document objects response"""
+    data: Optional[List[Document]]
+
+
 class DocumentSearchResultResponse(Response):
     """Full-text search response data model"""
     data: Optional[List[DocumentSearchResult]]
-
-
-
-class DocumentResponse(Response):
-    """"""
-    data: Optional[Document]
 
 
 class DocumentAnswerResponse(Response):
