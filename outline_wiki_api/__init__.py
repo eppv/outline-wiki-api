@@ -5,6 +5,7 @@ from .utils import get_base_url, get_token
 from .resources.documents import Documents
 from .resources.collections import Collections
 from .resources.auth import Auth
+from .resources.users import Users
 
 
 class OutlineWiki:
@@ -20,6 +21,7 @@ class OutlineWiki:
         self.auth = Auth(self._client)
         self.documents = Documents(self._client)
         self.collections = Collections(self._client)
+        self.users = Users(self._client)
         # TODO: Add other resources here
         logging.basicConfig(level=logging_level, format="%(asctime)s - %(name)s: %(levelname)s: %(message)s")
 
