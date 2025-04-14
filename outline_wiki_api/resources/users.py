@@ -22,6 +22,7 @@ class Users(Resources):
     Methods:
         info: Retrieves a User object
         list: Retrieves an Array of User objects
+        update_role: Change a users role
     """
     _path: str = '/users'
 
@@ -29,7 +30,7 @@ class Users(Resources):
         """Retrieves a User object representing an individual with access to the knowledge base.
         Users can be created automatically when signing in with SSO or when a user is invited via email.
         Args:
-            user_id:
+            user_id: The User to retrieve
 
         Returns:
             UserResponse: a response objects which contains a User object as data
@@ -78,3 +79,23 @@ class Users(Resources):
 
         response = self.post("list", data=data)
         return UserListResponse(**response.json())
+
+    def update_role(
+            self,
+            user_id: Union[str, UUID],
+            role: UserRole
+    ) -> UserResponse:
+        """
+        Change the role of a user, only available to admin authorization.
+
+        Args:
+            user_id: Unique identifier for the user.
+            role: Workspace-wide role
+
+        Returns:
+            UserResponse: a response objects which contains a User object as data
+
+        """
+        data = {"id": user_id, "role": role}
+        response = self.post("update_role", data=data)
+        return UserResponse(**response.json())
