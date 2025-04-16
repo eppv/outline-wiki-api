@@ -3,7 +3,7 @@ from typing import Optional, List, Dict, Union
 from uuid import UUID
 from .base import Resources
 from ..models.response import Pagination, Sort
-from ..models.collection import CollectionResponse, CollectionListResponse
+from ..models.collection import CollectionResponse, CollectionListResponse, CollectionNavigationResponse
 
 
 class Collections(Resources):
@@ -15,6 +15,7 @@ class Collections(Resources):
 
     Methods:
         info: Retrieve a collection
+        documents: Retrieve a collections document structure
         list: List all collections
 
     """
@@ -35,6 +36,21 @@ class Collections(Resources):
         data = {"id": str(collection_id)}
         response = self.post("info", data=data)
         return CollectionResponse(**response.json())
+
+    def documents(self, collection_id: Union[str, UUID]):
+        """
+        Retrieve a collections document structure (as nested navigation nodes)
+
+        Args:
+            collection_id: Unique identifier for the collection
+
+        Returns:
+            CollectionNavigationResponse:
+                A response containing a nested structure of document navigation nodes
+        """
+        data = {"id": str(collection_id)}
+        response = self.post("documents", data=data)
+        return CollectionNavigationResponse(**response.json())
 
     def list(
             self,
