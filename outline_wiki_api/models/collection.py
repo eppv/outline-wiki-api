@@ -133,5 +133,9 @@ class Collection(BaseModel):
     )
 
 
+class CollectionResponse(Response):
+    data: Optional[Collection] = Field(None)
+
+
 class CollectionListResponse(Response):
-    data: Optional[List[Collection]]
+    data: Optional[List[Collection]] = Field([])
