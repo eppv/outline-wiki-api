@@ -1,8 +1,9 @@
 from datetime import datetime
 from enum import Enum
-from typing import Optional, Dict
+from typing import Optional, Dict, List
 from uuid import UUID
 from pydantic import BaseModel, Field, EmailStr
+from .response import Response
 
 
 class UserRole(str, Enum):
@@ -99,3 +100,11 @@ class User(BaseModel):
         alias='notificationSettings',
         description="User's notification preferences and settings"
     )
+
+
+class UserResponse(Response):
+    data: Optional[User] = None
+
+
+class UserListResponse(Response):
+    data: Optional[List[User]] = []
