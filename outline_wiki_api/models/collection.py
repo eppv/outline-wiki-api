@@ -82,8 +82,8 @@ class Collection(BaseModel):
         example="folder"
     )
 
-    permission: Permission = Field(
-        ...,
+    permission: Optional[Permission] = Field(
+        None,
         description="Access permissions for this collection"
     )
 
