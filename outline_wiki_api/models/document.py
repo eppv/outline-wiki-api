@@ -247,12 +247,19 @@ class DocumentAnswerResponse(Response):
     search: DocumentAnswer
 
 
-class DocumentMoveResponse(BaseModel):
+class DocumentMovement(BaseModel):
     """
-    Response from moving a document
+    Data from moving a document
     """
     documents: List[Document]
     collections: List[Collection]
+
+
+class DocumentMoveResponse(Response):
+    """
+    Response from moving a document
+    """
+    data: DocumentMovement
 
 
 class DocumentUsersResponse(Response):

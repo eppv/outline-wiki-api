@@ -1,5 +1,4 @@
 
-from io import BufferedReader
 from typing import Optional, Dict, Union, Literal, Tuple
 from uuid import UUID
 from .base import Resources
@@ -358,28 +357,30 @@ class Documents(Resources):
     def move(
             self,
             doc_id: Union[UUID, str],
-            collection_id: Optional[Union[UUID, str]] = None,
+            collection_id: Union[UUID, str],
             parent_document_id: Optional[Union[UUID, str]] = None
     ) -> DocumentMoveResponse:
         """
-        Move a document to a new location
+        Move a document to a new location or collection.md. If no parent document
+        is provided, the document will be moved to the collection.md root.
 
         Args:
-            doc_id: Document ID to move
-            collection_id: Target collection ID
-            parent_document_id: Target parent document ID
+            doc_id: Document ID to move. Either the UUID or the urlId is acceptable.
+            collection_id: Target collection ID.
+            parent_document_id: Target parent document ID.
 
         Returns:
             DocumentMoveResponse: Updated documents and collections
         """
-        data = {"id": str(doc_id)}
-        if collection_id:
-            data["collectionId"] = str(collection_id)
+        data = {
+            "id": str(doc_id),
+            "collectionId": str(collection_id)
+        }
         if parent_document_id:
             data["parentDocumentId"] = str(parent_document_id)
 
         response = self.post("move", data=data)
-        return DocumentMoveResponse(**response.json()["data"])
+        return DocumentMoveResponse(**response.json())
 
     def archive(self, doc_id: Union[UUID, str]) -> Document:
         """
