@@ -1,16 +1,9 @@
 from datetime import datetime
-from enum import Enum
-from typing import Optional, List, Any, Self
+from typing import Optional, List, Self
 from uuid import UUID
 from pydantic import BaseModel, Field
 from .user import User
-from .response import Sort, Response
-
-
-class Permission(str, Enum):
-    """Available permission options for collections"""
-    READ = 'read'
-    READ_WRITE = 'read_write'
+from .response import Sort, Response, Permission
 
 
 class Collection(BaseModel):
