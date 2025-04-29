@@ -2,9 +2,13 @@
 from typing import Optional, Dict, Union, Literal, Tuple
 from uuid import UUID
 from .base import Resources
-from ..models.response import Pagination, Sort, Period
+from ..models.response import (
+    Pagination,
+    Sort,
+    Period,
+    Permission
+)
 from ..models.document import (
-    Document,
     DocumentResponse,
     DocumentListResponse,
     DocumentSearchResultResponse,
@@ -183,6 +187,45 @@ class Documents(Resources):
             data["templateId"] = str(template_id)
 
         response = self.post("create", data=data)
+        return DocumentResponse(**response.json())
+
+    def update(
+            self,
+            doc_id: Union[UUID, str],
+            title: Optional[str],
+            text: Optional[str],
+            append: bool = False,
+            publish: bool = False,
+            done: bool = False
+    ) -> DocumentResponse:
+        """
+        Args:
+            doc_id: Unique identifier for the document. Either the UUID or the urlId is acceptable.
+            title: The title of the document.
+            text: The body of the document in markdown.
+            append: If true the text field will be appended to the end
+                    of the existing document, rather than the default behavior of
+                    replacing it. This is potentially useful for things like logging
+                    into a document.
+            publish: Whether this document should be published and made visible to other team members, if a draft
+            done: Whether the editing session has finished, this will
+                  trigger any notifications. This property will soon be deprecated.
+
+        Returns:
+            DocumentResponse: The response object for the updated document
+        """
+        data = {
+            "id": str(doc_id),
+            "append": append,
+            "publish": publish,
+            "done": done
+        }
+        if title:
+            data["title"] = title
+        if text:
+            data["text"] = text
+
+        response = self.post("update", data=data)
         return DocumentResponse(**response.json())
 
     def search(
@@ -448,10 +491,10 @@ class Documents(Resources):
 
         Args:
             doc_id: Document ID
-            query: Optional filter by user name
+            query: Optional filter by username
 
         Returns:
-            DocumentUsersResponse: List of users with access
+            DocumentUsersResponse: The response object with the list of users with access
         """
         data = {"id": str(doc_id)}
         if query:
@@ -470,10 +513,10 @@ class Documents(Resources):
 
         Args:
             doc_id: Document ID
-            query: Optional filter by user name
+            query: Optional filter by username
 
         Returns:
-            DocumentMembershipsResponse: List of direct memberships
+            DocumentMembershipsResponse: The response object with the list of direct memberships
         """
         data = {"id": str(doc_id)}
         if query:
@@ -486,8 +529,8 @@ class Documents(Resources):
             self,
             doc_id: Union[UUID, str],
             user_id: Union[UUID, str],
-            permission: Optional[str] = None
-    ) -> Dict:
+            permission: Optional[Permission] = None
+    ) -> DocumentMembershipsResponse:
         """
         Add a user to a document
 
@@ -497,7 +540,7 @@ class Documents(Resources):
             permission: Optional permission level
 
         Returns:
-            Dict: Updated users and memberships
+            DocumentMembershipsResponse: The response object with the list of updated users and memberships
         """
         data = {
             "id": str(doc_id),
@@ -507,7 +550,7 @@ class Documents(Resources):
             data["permission"] = permission
 
         response = self.post("add_user", data=data)
-        return response.json()["data"]
+        return DocumentMembershipsResponse(**response.json())
 
     def remove_user(
             self,

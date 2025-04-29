@@ -71,4 +71,7 @@ class Response(BaseModel):
     policies: Optional[List[Policy]] = None
 
 
-
+class Permission(str, Enum):
+    """Available permission options for collections and documents"""
+    READ = 'read'
+    READ_WRITE = 'read_write'
