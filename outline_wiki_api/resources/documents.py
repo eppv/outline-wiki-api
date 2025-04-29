@@ -154,7 +154,7 @@ class Documents(Resources):
             template_id: Optional[Union[UUID, str]] = None,
             template: bool = False,
             publish: bool = False
-    ) -> Document:
+    ) -> DocumentResponse:
         """
         Create a new document
 
@@ -168,7 +168,7 @@ class Documents(Resources):
             publish: Whether to publish immediately
 
         Returns:
-            Document: The created document
+            DocumentResponse: The response object for the created document
         """
         data = {
             "title": title,
@@ -184,7 +184,7 @@ class Documents(Resources):
             data["templateId"] = str(template_id)
 
         response = self.post("create", data=data)
-        return Document(**response.json()["data"])
+        return DocumentResponse(**response.json())
 
     def search(
             self,
@@ -208,7 +208,7 @@ class Documents(Resources):
             date_filter: Any documents that have not been updated within the specified period will be filtered out
             pagination: Custom pagination (default: offset=0, limit=25)
         Returns:
-            Response: Contains search results, policies, and pagination info
+            DocumentSearchResultResponse: Contains search results, policies, and pagination info
         """
         data = {"query": query}
         if user_id:
@@ -248,7 +248,7 @@ class Documents(Resources):
             sorting: Sorting parameters
 
         Returns:
-            DocumentList: List of draft documents
+            DocumentListResponse: The response object with the list of draft documents
         """
         data = {}
         if collection_id:
@@ -275,7 +275,7 @@ class Documents(Resources):
             pagination: Pagination parameters
             sorting: Sorting parameters
         Returns:
-            DocumentList: List of recently viewed documents
+            DocumentListResponse: The response object with the list of recently viewed documents
         """
         data = {}
         if pagination:
@@ -307,7 +307,7 @@ class Documents(Resources):
             date_filter: Filter by date
 
         Returns:
-            DocumentAnswerResponse: Answer and related documents
+            DocumentAnswerResponse: The response object for the answer and related documents
         """
         data = {"query": query}
         if user_id:
@@ -342,7 +342,7 @@ class Documents(Resources):
         response = self.post("templatize", data=data)
         return DocumentResponse(**response.json())
 
-    def unpublish(self, doc_id: Union[UUID, str]) -> Document:
+    def unpublish(self, doc_id: Union[UUID, str]) -> DocumentResponse:
         """
         Unpublish a document
 
@@ -350,10 +350,10 @@ class Documents(Resources):
             doc_id: Document ID to unpublish
 
         Returns:
-            Document: The unpublished document
+            DocumentResponse: The response object for the unpublished document
         """
         response = self.post("unpublish", data={"id": str(doc_id)})
-        return Document(**response.json()["data"])
+        return DocumentResponse(**response.json())
 
     def move(
             self,
