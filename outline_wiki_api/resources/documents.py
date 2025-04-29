@@ -192,8 +192,8 @@ class Documents(Resources):
     def update(
             self,
             doc_id: Union[UUID, str],
-            title: Optional[str],
-            text: Optional[str],
+            title: Optional[str] = None,
+            text: Optional[str] = None,
             append: bool = False,
             publish: bool = False,
             done: bool = False

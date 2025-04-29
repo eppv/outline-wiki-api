@@ -1,7 +1,8 @@
 from datetime import datetime
-from typing import Literal
+from typing import Literal, Optional
 from pydantic import BaseModel, Field
 from uuid import UUID
+from .response import Permission
 
 
 class Membership(BaseModel):
@@ -12,11 +13,27 @@ class Membership(BaseModel):
     the user's permission level and associated metadata.
     """
     id: str = Field(..., description="Unique identifier for the membership")
-    userId: UUID = Field(..., description="ID of the user who is a member")
-    collectionId: UUID = Field(..., description="ID of the collection the user is a member of")
-    permission: Literal["read", "read_write"] = Field(
+    user_id: UUID = Field(..., alias="userId", description="ID of the user who is a member")
+    document_id: Optional[UUID] = Field(None, alias="documentId")
+    collection_id: Optional[UUID] = Field(
+        None,
+        alias="collectionId",
+        description="ID of the collection the user is a member of")
+    permission: Optional[Permission] = Field(
         ..., 
         description="Permission level for the user on this document"
     )
-    createdAt: datetime = Field(..., description="When the membership was created")
-    updatedAt: datetime = Field(..., description="When the membership was last updated")
+    created_by_id: Optional[UUID] = Field(..., alias='createdById')
+    created_at: Optional[datetime] = Field(
+        None,
+        alias="createdAt",
+        description="When the membership was created")
+    updated_at: Optional[datetime] = Field(
+        None,
+        alias="updatedAt",
+        description="When the membership was last updated")
+    source_id: Optional[UUID] = Field(
+        ...,
+        alias="sourceId"
+    )
+    index: Optional[str]
