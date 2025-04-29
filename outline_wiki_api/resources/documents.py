@@ -3,7 +3,7 @@ from io import BufferedReader
 from typing import Optional, Dict, Union, Literal, Tuple
 from uuid import UUID
 from .base import Resources
-from ..models.response import Pagination, Sort
+from ..models.response import Pagination, Sort, Period
 from ..models.document import (
     Document,
     DocumentResponse,
@@ -12,7 +12,8 @@ from ..models.document import (
     DocumentAnswerResponse,
     DocumentMoveResponse,
     DocumentUsersResponse,
-    DocumentMembershipsResponse
+    DocumentMembershipsResponse,
+    DocumentStatus
 )
 from ..utils import get_file_object_for_import
 
@@ -26,7 +27,7 @@ class Documents(Resources):
     """
     _path: str = "/documents"
 
-    def info(self, doc_id: Union[str, UUID], share_id: Optional[Union[str, UUID]] = None) -> Document:
+    def info(self, doc_id: Union[str, UUID], share_id: Optional[Union[str, UUID]] = None) -> DocumentResponse:
         """
         Retrieve a document by ID or shareId
 
@@ -35,13 +36,13 @@ class Documents(Resources):
             share_id: Optional share identifier
 
         Returns:
-            Document: The requested document
+            DocumentResponse: The response object for the requested document
         """
         data = {"id": str(doc_id)}
         if share_id:
             data["shareId"] = str(share_id)
         response = self.post("info", data=data)
-        return DocumentResponse(**response.json()).data
+        return DocumentResponse(**response.json())
 
     def import_file(
             self,
@@ -50,7 +51,7 @@ class Documents(Resources):
             parent_document_id: Optional[Union[UUID, str]] = None,
             template: bool = False,
             publish: bool = False
-    ) -> Document:
+    ) -> DocumentResponse:
         """
         Import a file as a new document
 
@@ -62,7 +63,7 @@ class Documents(Resources):
             publish: Whether to publish immediately
 
         Returns:
-            Document: The created document
+            DocumentResponse: The response object for the created document
         """
         if isinstance(file, str):
             file_object = get_file_object_for_import(file)
@@ -84,7 +85,7 @@ class Documents(Resources):
             files["publish"] = (None, "false")
 
         response = self.post("import", files=files)
-        return DocumentResponse(**response.json()).data
+        return DocumentResponse(**response.json())
 
     def export(self, doc_id: str) -> str:
         """
@@ -122,7 +123,7 @@ class Documents(Resources):
             sorting: Custom sorting order (takes `Sort` object)
 
         Returns:
-            DocumentList: Contains data (documents), policies, and pagination info
+            DocumentListResponse: Contains data (documents), policies, and pagination info
         """
 
         data = {}
@@ -191,8 +192,8 @@ class Documents(Resources):
             collection_id: Optional[Union[UUID, str]] = None,
             user_id: Optional[Union[UUID, str]] = None,
             document_id: Optional[Union[UUID, str]] = None,
-            status_filter: Optional[Literal["draft", "archived", "published"]] = None,
-            date_filter: Optional[Literal["day", "week", "month", "year"]] = None,
+            status_filter: Optional[DocumentStatus] = None,
+            date_filter: Optional[Period] = None,
             pagination: Optional[Union[Pagination, Dict]] = None
     ) -> DocumentSearchResultResponse:
         """
@@ -323,18 +324,23 @@ class Documents(Resources):
         response = self.post("answerQuestion", data=data)
         return DocumentAnswerResponse(**response.json())
 
-    def templatize(self, doc_id: Union[UUID, str]) -> Document:
+    def templatize(self, doc_id: Union[UUID, str], publish: bool = False) -> DocumentResponse:
         """
         Create a template from a document
 
         Args:
             doc_id: Document ID to templatize
+            publish: Whether to publish immediately
 
         Returns:
-            Document: The created template
+            DocumentResponse: The response object for the created template
         """
-        response = self.post("templatize", data={"id": str(doc_id)})
-        return Document(**response.json()["data"])
+        data = {
+            "id": str(doc_id),
+            "publish": publish
+        }
+        response = self.post("templatize", data=data)
+        return DocumentResponse(**response.json())
 
     def unpublish(self, doc_id: Union[UUID, str]) -> Document:
         """
