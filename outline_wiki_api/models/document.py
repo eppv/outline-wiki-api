@@ -1,4 +1,5 @@
 from datetime import datetime
+from enum import Enum
 from typing import Optional, List, Literal
 from pydantic import BaseModel, Field
 from uuid import UUID
@@ -6,6 +7,13 @@ from .user import User
 from .response import Response
 from .collection import Collection
 from .membership import Membership
+
+
+class DocumentStatus(str, Enum):
+    """Available status options for documents"""
+    DRAFT = "draft"
+    ARCHIVED = "archived"
+    PUBLISHED = "published"
 
 
 class DocumentTasks(BaseModel):
@@ -31,11 +39,11 @@ class Document(BaseModel):
             "read_only": "true"
         }
     )
-    collection_id: UUID = Field(
+    collection_id: Optional[UUID] = Field(
         ...,
         alias='collectionId',
         json_schema_extra={
-            "description": "Identifier for the associated collection",
+            "description": "Identifier for the associated collection. Can be empty for templates.",
             "example": "123e4567-e89b-12d3-a456-426614174000"
         }
     )
