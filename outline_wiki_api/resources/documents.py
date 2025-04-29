@@ -370,7 +370,7 @@ class Documents(Resources):
             parent_document_id: Target parent document ID.
 
         Returns:
-            DocumentMoveResponse: Updated documents and collections
+            DocumentMoveResponse: The response object with the updated documents and collections data
         """
         data = {
             "id": str(doc_id),
@@ -382,7 +382,7 @@ class Documents(Resources):
         response = self.post("move", data=data)
         return DocumentMoveResponse(**response.json())
 
-    def archive(self, doc_id: Union[UUID, str]) -> Document:
+    def archive(self, doc_id: Union[UUID, str]) -> DocumentResponse:
         """
         Archive a document
 
@@ -390,16 +390,16 @@ class Documents(Resources):
             doc_id: Document ID to archive
 
         Returns:
-            Document: The archived document
+            DocumentResponse: The response object for the archived document
         """
         response = self.post("archive", data={"id": str(doc_id)})
-        return Document(**response.json()["data"])
+        return DocumentResponse(**response.json())
 
     def restore(
             self,
             doc_id: Union[UUID, str],
             revision_id: Optional[Union[UUID, str]] = None
-    ) -> Document:
+    ) -> DocumentResponse:
         """
         Restore a document
 
@@ -408,14 +408,14 @@ class Documents(Resources):
             revision_id: Optional revision ID to restore to
 
         Returns:
-            Document: The restored document
+            DocumentResponse: The response object for the restored document
         """
         data = {"id": str(doc_id)}
         if revision_id:
             data["revisionId"] = str(revision_id)
 
         response = self.post("restore", data=data)
-        return Document(**response.json()["data"])
+        return DocumentResponse(**response.json())
 
     def delete(
             self,
