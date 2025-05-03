@@ -22,22 +22,23 @@ class Auth(Resources):
         Retrieve authentication info
 
         Returns:
-            AuthResponse object containing the workspace and user info for the current authentication session
+            AuthResponse: Response object containing the workspace and user info for the current authentication session
         """
         response = self.post(endpoint="info").json()
         return AuthResponse(**response)
 
-    def config(self) -> httpx.Response:
+    def config(self) -> AuthResponse:
         """
         Retrieve authentication options
 
         Args:
 
         Returns:
-            httpx Response object containing configuration of the authentication service provider for the current authentication session
+            AuthResponse: Response object containing configuration of the authentication service provider for the current authentication session
         """
         endpoint = "config"
-        return self.post(endpoint=endpoint)
+        response = self.post(endpoint=endpoint)
+        return AuthResponse(**response.json())
 
     def get_current_user(self) -> User:
         """

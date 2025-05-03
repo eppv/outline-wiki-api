@@ -86,8 +86,8 @@ def test_config(auth_resource, mock_client):
 
     # Test config
     response = auth_resource.config()
-    assert response.json()["ok"] is True
-    assert response.json()["status"] == 200
+    assert response.ok is True
+    assert response.status == 200
     assert "providers" in response.json()["data"]
     assert "emailSignin" in response.json()["data"]
     
