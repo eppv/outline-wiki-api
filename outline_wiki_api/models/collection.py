@@ -1,16 +1,9 @@
 from datetime import datetime
-from enum import Enum
-from typing import Optional, List
+from typing import Optional, List, Self
 from uuid import UUID
 from pydantic import BaseModel, Field
 from .user import User
-from .response import Sort, Response
-
-
-class Permission(str, Enum):
-    """Available permission options for collections"""
-    READ = 'read'
-    READ_WRITE = 'read_write'
+from .response import Sort, Response, Permission
 
 
 class Collection(BaseModel):
@@ -82,8 +75,8 @@ class Collection(BaseModel):
         example="folder"
     )
 
-    permission: Permission = Field(
-        ...,
+    permission: Optional[Permission] = Field(
+        None,
         description="Access permissions for this collection"
     )
 
@@ -133,5 +126,35 @@ class Collection(BaseModel):
     )
 
 
+class NavigationNode(BaseModel):
+    """
+    Represents a document as a navigation node with its children (also represented as navigation nodes)
+    """
+    id: UUID = Field(
+        ...,
+        description="Unique identifier for the object",
+        read_only=True,
+        example="550e8400-e29b-41d4-a716-446655440000"
+    )
+    url: str
+    title: str
+    children: List[Optional[Self]] = Field([])
+    icon: Optional[str] = Field(None)
+    color: Optional[str] = Field(
+        None,
+        description="Document's icon color in hex format",
+        pattern="^#[0-9a-fA-F]{6}$",
+        example="#FF5733"
+    )
+
+
+class CollectionResponse(Response):
+    data: Optional[Collection] = Field(None)
+
+
+class CollectionNavigationResponse(Response):
+    data: List[NavigationNode]
+
+
 class CollectionListResponse(Response):
-    data: Optional[List[Collection]]
+    data: Optional[List[Collection]] = Field([])

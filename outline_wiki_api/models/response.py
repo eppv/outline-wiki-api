@@ -3,8 +3,17 @@ Basic API data structures
 """
 
 from uuid import UUID
+from enum import Enum
 from pydantic import BaseModel, Field
 from typing import Optional, Dict, List, Any, Literal
+
+
+class Period(str, Enum):
+    """Available date filter options"""
+    DAY = "day"
+    WEEK = "week"
+    MONTH = "month"
+    YEAR = "year"
 
 
 class Policy(BaseModel):
@@ -62,4 +71,7 @@ class Response(BaseModel):
     policies: Optional[List[Policy]] = None
 
 
-
+class Permission(str, Enum):
+    """Available permission options for collections and documents"""
+    READ = 'read'
+    READ_WRITE = 'read_write'

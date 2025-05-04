@@ -1,18 +1,22 @@
 
-from io import BufferedReader
 from typing import Optional, Dict, Union, Literal, Tuple
 from uuid import UUID
 from .base import Resources
-from ..models.response import Pagination, Sort
+from ..models.response import (
+    Pagination,
+    Sort,
+    Period,
+    Permission
+)
 from ..models.document import (
-    Document,
     DocumentResponse,
     DocumentListResponse,
     DocumentSearchResultResponse,
     DocumentAnswerResponse,
     DocumentMoveResponse,
     DocumentUsersResponse,
-    DocumentMembershipsResponse
+    DocumentMembershipsResponse,
+    DocumentStatus
 )
 from ..utils import get_file_object_for_import
 
@@ -26,7 +30,7 @@ class Documents(Resources):
     """
     _path: str = "/documents"
 
-    def info(self, doc_id: Union[str, UUID], share_id: Optional[Union[str, UUID]] = None) -> Document:
+    def info(self, doc_id: Union[str, UUID], share_id: Optional[Union[str, UUID]] = None) -> DocumentResponse:
         """
         Retrieve a document by ID or shareId
 
@@ -35,13 +39,13 @@ class Documents(Resources):
             share_id: Optional share identifier
 
         Returns:
-            Document: The requested document
+            DocumentResponse: The response object for the requested document
         """
         data = {"id": str(doc_id)}
         if share_id:
             data["shareId"] = str(share_id)
         response = self.post("info", data=data)
-        return DocumentResponse(**response.json()).data
+        return DocumentResponse(**response.json())
 
     def import_file(
             self,
@@ -50,7 +54,7 @@ class Documents(Resources):
             parent_document_id: Optional[Union[UUID, str]] = None,
             template: bool = False,
             publish: bool = False
-    ) -> Document:
+    ) -> DocumentResponse:
         """
         Import a file as a new document
 
@@ -62,7 +66,7 @@ class Documents(Resources):
             publish: Whether to publish immediately
 
         Returns:
-            Document: The created document
+            DocumentResponse: The response object for the created document
         """
         if isinstance(file, str):
             file_object = get_file_object_for_import(file)
@@ -84,7 +88,7 @@ class Documents(Resources):
             files["publish"] = (None, "false")
 
         response = self.post("import", files=files)
-        return DocumentResponse(**response.json()).data
+        return DocumentResponse(**response.json())
 
     def export(self, doc_id: str) -> str:
         """
@@ -122,7 +126,7 @@ class Documents(Resources):
             sorting: Custom sorting order (takes `Sort` object)
 
         Returns:
-            DocumentList: Contains data (documents), policies, and pagination info
+            DocumentListResponse: Contains data (documents), policies, and pagination info
         """
 
         data = {}
@@ -153,7 +157,7 @@ class Documents(Resources):
             template_id: Optional[Union[UUID, str]] = None,
             template: bool = False,
             publish: bool = False
-    ) -> Document:
+    ) -> DocumentResponse:
         """
         Create a new document
 
@@ -167,7 +171,7 @@ class Documents(Resources):
             publish: Whether to publish immediately
 
         Returns:
-            Document: The created document
+            DocumentResponse: The response object for the created document
         """
         data = {
             "title": title,
@@ -183,7 +187,46 @@ class Documents(Resources):
             data["templateId"] = str(template_id)
 
         response = self.post("create", data=data)
-        return Document(**response.json()["data"])
+        return DocumentResponse(**response.json())
+
+    def update(
+            self,
+            doc_id: Union[UUID, str],
+            title: Optional[str] = None,
+            text: Optional[str] = None,
+            append: bool = False,
+            publish: bool = False,
+            done: bool = False
+    ) -> DocumentResponse:
+        """
+        Args:
+            doc_id: Unique identifier for the document. Either the UUID or the urlId is acceptable.
+            title: The title of the document.
+            text: The body of the document in markdown.
+            append: If true the text field will be appended to the end
+                    of the existing document, rather than the default behavior of
+                    replacing it. This is potentially useful for things like logging
+                    into a document.
+            publish: Whether this document should be published and made visible to other team members, if a draft
+            done: Whether the editing session has finished, this will
+                  trigger any notifications. This property will soon be deprecated.
+
+        Returns:
+            DocumentResponse: The response object for the updated document
+        """
+        data = {
+            "id": str(doc_id),
+            "append": append,
+            "publish": publish,
+            "done": done
+        }
+        if title:
+            data["title"] = title
+        if text:
+            data["text"] = text
+
+        response = self.post("update", data=data)
+        return DocumentResponse(**response.json())
 
     def search(
             self,
@@ -191,8 +234,8 @@ class Documents(Resources):
             collection_id: Optional[Union[UUID, str]] = None,
             user_id: Optional[Union[UUID, str]] = None,
             document_id: Optional[Union[UUID, str]] = None,
-            status_filter: Optional[Literal["draft", "archived", "published"]] = None,
-            date_filter: Optional[Literal["day", "week", "month", "year"]] = None,
+            status_filter: Optional[DocumentStatus] = None,
+            date_filter: Optional[Period] = None,
             pagination: Optional[Union[Pagination, Dict]] = None
     ) -> DocumentSearchResultResponse:
         """
@@ -207,7 +250,7 @@ class Documents(Resources):
             date_filter: Any documents that have not been updated within the specified period will be filtered out
             pagination: Custom pagination (default: offset=0, limit=25)
         Returns:
-            Response: Contains search results, policies, and pagination info
+            DocumentSearchResultResponse: Contains search results, policies, and pagination info
         """
         data = {"query": query}
         if user_id:
@@ -247,7 +290,7 @@ class Documents(Resources):
             sorting: Sorting parameters
 
         Returns:
-            DocumentList: List of draft documents
+            DocumentListResponse: The response object with the list of draft documents
         """
         data = {}
         if collection_id:
@@ -274,7 +317,7 @@ class Documents(Resources):
             pagination: Pagination parameters
             sorting: Sorting parameters
         Returns:
-            DocumentList: List of recently viewed documents
+            DocumentListResponse: The response object with the list of recently viewed documents
         """
         data = {}
         if pagination:
@@ -306,7 +349,7 @@ class Documents(Resources):
             date_filter: Filter by date
 
         Returns:
-            DocumentAnswerResponse: Answer and related documents
+            DocumentAnswerResponse: The response object for the answer and related documents
         """
         data = {"query": query}
         if user_id:
@@ -323,20 +366,25 @@ class Documents(Resources):
         response = self.post("answerQuestion", data=data)
         return DocumentAnswerResponse(**response.json())
 
-    def templatize(self, doc_id: Union[UUID, str]) -> Document:
+    def templatize(self, doc_id: Union[UUID, str], publish: bool = False) -> DocumentResponse:
         """
         Create a template from a document
 
         Args:
             doc_id: Document ID to templatize
+            publish: Whether to publish immediately
 
         Returns:
-            Document: The created template
+            DocumentResponse: The response object for the created template
         """
-        response = self.post("templatize", data={"id": str(doc_id)})
-        return Document(**response.json()["data"])
+        data = {
+            "id": str(doc_id),
+            "publish": publish
+        }
+        response = self.post("templatize", data=data)
+        return DocumentResponse(**response.json())
 
-    def unpublish(self, doc_id: Union[UUID, str]) -> Document:
+    def unpublish(self, doc_id: Union[UUID, str]) -> DocumentResponse:
         """
         Unpublish a document
 
@@ -344,38 +392,40 @@ class Documents(Resources):
             doc_id: Document ID to unpublish
 
         Returns:
-            Document: The unpublished document
+            DocumentResponse: The response object for the unpublished document
         """
         response = self.post("unpublish", data={"id": str(doc_id)})
-        return Document(**response.json()["data"])
+        return DocumentResponse(**response.json())
 
     def move(
             self,
             doc_id: Union[UUID, str],
-            collection_id: Optional[Union[UUID, str]] = None,
+            collection_id: Union[UUID, str],
             parent_document_id: Optional[Union[UUID, str]] = None
     ) -> DocumentMoveResponse:
         """
-        Move a document to a new location
+        Move a document to a new location or collection.md. If no parent document
+        is provided, the document will be moved to the collection.md root.
 
         Args:
-            doc_id: Document ID to move
-            collection_id: Target collection ID
-            parent_document_id: Target parent document ID
+            doc_id: Document ID to move. Either the UUID or the urlId is acceptable.
+            collection_id: Target collection ID.
+            parent_document_id: Target parent document ID.
 
         Returns:
-            DocumentMoveResponse: Updated documents and collections
+            DocumentMoveResponse: The response object with the updated documents and collections data
         """
-        data = {"id": str(doc_id)}
-        if collection_id:
-            data["collectionId"] = str(collection_id)
+        data = {
+            "id": str(doc_id),
+            "collectionId": str(collection_id)
+        }
         if parent_document_id:
             data["parentDocumentId"] = str(parent_document_id)
 
         response = self.post("move", data=data)
-        return DocumentMoveResponse(**response.json()["data"])
+        return DocumentMoveResponse(**response.json())
 
-    def archive(self, doc_id: Union[UUID, str]) -> Document:
+    def archive(self, doc_id: Union[UUID, str]) -> DocumentResponse:
         """
         Archive a document
 
@@ -383,16 +433,16 @@ class Documents(Resources):
             doc_id: Document ID to archive
 
         Returns:
-            Document: The archived document
+            DocumentResponse: The response object for the archived document
         """
         response = self.post("archive", data={"id": str(doc_id)})
-        return Document(**response.json()["data"])
+        return DocumentResponse(**response.json())
 
     def restore(
             self,
             doc_id: Union[UUID, str],
             revision_id: Optional[Union[UUID, str]] = None
-    ) -> Document:
+    ) -> DocumentResponse:
         """
         Restore a document
 
@@ -401,14 +451,14 @@ class Documents(Resources):
             revision_id: Optional revision ID to restore to
 
         Returns:
-            Document: The restored document
+            DocumentResponse: The response object for the restored document
         """
         data = {"id": str(doc_id)}
         if revision_id:
             data["revisionId"] = str(revision_id)
 
         response = self.post("restore", data=data)
-        return Document(**response.json()["data"])
+        return DocumentResponse(**response.json())
 
     def delete(
             self,
@@ -441,10 +491,10 @@ class Documents(Resources):
 
         Args:
             doc_id: Document ID
-            query: Optional filter by user name
+            query: Optional filter by username
 
         Returns:
-            DocumentUsersResponse: List of users with access
+            DocumentUsersResponse: The response object with the list of users with access
         """
         data = {"id": str(doc_id)}
         if query:
@@ -463,10 +513,10 @@ class Documents(Resources):
 
         Args:
             doc_id: Document ID
-            query: Optional filter by user name
+            query: Optional filter by username
 
         Returns:
-            DocumentMembershipsResponse: List of direct memberships
+            DocumentMembershipsResponse: The response object with the list of direct memberships
         """
         data = {"id": str(doc_id)}
         if query:
@@ -479,8 +529,8 @@ class Documents(Resources):
             self,
             doc_id: Union[UUID, str],
             user_id: Union[UUID, str],
-            permission: Optional[str] = None
-    ) -> Dict:
+            permission: Optional[Permission] = None
+    ) -> DocumentMembershipsResponse:
         """
         Add a user to a document
 
@@ -490,7 +540,7 @@ class Documents(Resources):
             permission: Optional permission level
 
         Returns:
-            Dict: Updated users and memberships
+            DocumentMembershipsResponse: The response object with the list of updated users and memberships
         """
         data = {
             "id": str(doc_id),
@@ -500,7 +550,7 @@ class Documents(Resources):
             data["permission"] = permission
 
         response = self.post("add_user", data=data)
-        return response.json()["data"]
+        return DocumentMembershipsResponse(**response.json())
 
     def remove_user(
             self,

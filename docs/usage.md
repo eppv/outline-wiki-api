@@ -81,7 +81,7 @@ You can do all kinds of stuff with it using the API.
                 collection_id=collection.id,
                 publish=True
             )
-            print(f"New document created in collection {my_collection_name}:\n{new_doc}")
+            print(f"New document created in collection {my_collection_name}:\n{new_doc.data.title}")
     ```
 
     1.  Search for the **"Welcome"** collection to create a new doc there
@@ -96,7 +96,7 @@ You can do all kinds of stuff with it using the API.
     my_collection_id = "ff3c58ac-f134-46b2-8601-876dc494044a" # (1)
     my_file = 'path/to/some_markdown_document.md' # (2)
 
-    document = app.documents.import_file(file=my_file, collection_id=my_collection_id) # (3)
+    document = app.documents.import_file(file=my_file, collection_id=my_collection_id).data # (3)
     ```
 
     1. `collection_id` is essential argument. It points to the collection where the imported document will be created.
