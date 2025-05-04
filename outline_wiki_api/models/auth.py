@@ -3,11 +3,17 @@ Data structures for Authentication resource information and responses
 """
 
 from pydantic import BaseModel, Field
-from typing import Optional, List, Union
+from typing import Optional, List, Union, Dict
 
 from .response import Response
 from .user import User
 from .team import Team
+
+
+class AuthProvider(BaseModel):
+    id: str
+    name: str
+    auth_url: str = Field(..., alias="authUrl")
 
 
 class AuthInfoData(BaseModel):
@@ -28,8 +34,10 @@ class AuthConfigData(BaseModel):
     Authentication options
     """
     name: str
-    hostname: str
-    services: Optional[List]
+    hostname: Optional[str] = None
+    services: Optional[List[Dict]] = Field([])
+    custom_theme: Optional[Dict] = Field({}, alias='customTheme')
+    providers: Optional[List[AuthProvider]]
 
 
 class AuthResponse(Response):

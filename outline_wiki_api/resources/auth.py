@@ -24,8 +24,8 @@ class Auth(Resources):
         Returns:
             AuthResponse: Response object containing the workspace and user info for the current authentication session
         """
-        response = self.post(endpoint="info").json()
-        return AuthResponse(**response)
+        response = self.post(endpoint="info")
+        return AuthResponse(**response.json())
 
     def config(self) -> AuthResponse:
         """
@@ -36,8 +36,7 @@ class Auth(Resources):
         Returns:
             AuthResponse: Response object containing configuration of the authentication service provider for the current authentication session
         """
-        endpoint = "config"
-        response = self.post(endpoint=endpoint)
+        response = self.post(endpoint="config")
         return AuthResponse(**response.json())
 
     def get_current_user(self) -> User:
