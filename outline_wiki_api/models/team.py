@@ -26,7 +26,7 @@ class Team(BaseModel):
         example="Engineering Team"
     )
 
-    avatar_url: Optional[HttpUrl] = Field(
+    avatar_url: Optional[str] = Field(
         None,
         alias='avatarUrl',
         description="The URL for the image associated with this team, it will be "
