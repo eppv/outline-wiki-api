@@ -1,0 +1,14 @@
+
+# ide
+.idea/
+
+# env
+.venv/
+*.env
+
+# build
+dist/
+
+# custom
+dev/
+

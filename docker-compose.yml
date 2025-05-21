@@ -1,0 +1,10 @@
+
+services:
+  webdocs:
+    image: outline-wiki-api-docs-site
+    build: .
+    container_name: outline-wiki-api-docs
+    ports:
+      - "8000:80"
+
+
