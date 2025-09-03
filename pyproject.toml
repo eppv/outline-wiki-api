@@ -2,18 +2,12 @@
 name = "outline_wiki_api"
 version = "0.3.0"
 description = "A python API for Outline Wiki."
-authors = [
-    { name = "eppv", email = "evgeniypalych@gmail.com" }
-]
+authors = [{ name = "eppv", email = "evgeniypalych@gmail.com" }]
 
 license = { file = "LICENSE" }
 readme = "README.md"
 requires-python = ">=3.12"
-dependencies = [
-    "pydantic>=2.10.0",
-    "pydantic[email]",
-    "httpx>=0.28.0"
-]
+dependencies = ["pydantic>=2.10.0", "pydantic[email]", "httpx>=0.28.0"]
 
 [dependency-groups]
 docs = [
@@ -21,20 +15,12 @@ docs = [
     "griffe-pydantic>=1.1.4",
     "mkdocs>=1.6.1",
     "mkdocs-material>=9.6.14",
-    "mkdocstrings[python]>=0.29.1"
+    "mkdocstrings[python]>=0.29.1",
 ]
-dev = [
-    "python-dotenv>=1.1.0",
-    "pandas>=2.2.3",
-    "duckdb>=1.2.2"
-]
+dev = ["python-dotenv>=1.1.0", "pandas>=2.2.3", "duckdb>=1.2.2"]
 
 [project.optional-dependencies]
-test = [
-    "pytest>=7.0.0",
-    "pytest-cov>=4.0.0",
-    "pytest-mock>=3.10.0"
-]
+test = ["pytest>=7.0.0", "pytest-cov>=4.0.0", "pytest-mock>=3.10.0"]
 
 [project.urls]
 GitHub = "https://github.com/eppv/outline-wiki-api"
@@ -51,4 +37,3 @@ exclude = ["docs/", "tests/", "dev/"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 python_files = ["test_*.py"]
-addopts = "-v --cov=outline_wiki_api"
