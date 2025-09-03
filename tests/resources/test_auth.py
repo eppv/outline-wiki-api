@@ -59,7 +59,7 @@ def test_info(auth_resource, mock_client):
     assert isinstance(response.data.user, User)
     assert isinstance(response.data.team, Team)
     assert response.data.collaboration_token == "collab_token"
-    
+
     mock_client.request.assert_called_with(
         method="POST",
         endpoint="/auth.info",
@@ -76,21 +76,21 @@ def test_config(auth_resource, mock_client):
         "ok": True,
         "status": 200,
         "data": {
-            "providers": ["google", "slack"],
-            "emailSignin": True,
-            "googleSignin": True,
-            "slackSignin": True
+            "name": "Test Team",
+            "customTheme": {},
+            "providers": [{"id": "oauth","name": "google",  "authUrl": "https://accounts.google.com/o/oauth2/v2/auth"}]
         }
     }
     mock_client.request.return_value = mock_response
 
     # Test config
     response = auth_resource.config()
+    assert isinstance(response, AuthResponse)
     assert response.ok is True
     assert response.status == 200
-    assert "providers" in response.json()["data"]
-    assert "emailSignin" in response.json()["data"]
-    
+    assert response.data.providers
+    assert isinstance(response.data.custom_theme, dict)
+
     mock_client.request.assert_called_with(
         method="POST",
         endpoint="/auth.config",
@@ -151,7 +151,7 @@ def test_get_current_user(auth_resource, mock_client):
     assert isinstance(user, User)
     assert user.name == "Test User"
     assert user.email == "test@example.com"
-    
+
     # Verify that info was called
     mock_client.request.assert_called_with(
         method="POST",
@@ -213,7 +213,7 @@ def test_get_current_team(auth_resource, mock_client):
     assert isinstance(team, Team)
     assert team.name == "Test Team"
     assert team.sharing is True
-    
+
     # Verify that info was called
     mock_client.request.assert_called_with(
         method="POST",

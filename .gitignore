@@ -29,6 +29,9 @@ build/
 dist/
 *.egg-info
 
+# docs
+site/
+
 # custom
 dev/
 logs/

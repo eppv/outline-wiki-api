@@ -57,7 +57,7 @@ class Collection(BaseModel):
         description="The position of the collection in the sidebar",
         example="P",
         min_length=1,
-        max_length=2
+        max_length=10
     )
 
     color: Optional[str] = Field(

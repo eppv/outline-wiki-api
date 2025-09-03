@@ -5,7 +5,7 @@ A python wrapper for [Outline](https://www.getoutline.com) knowledge base platfo
 For full Outline API documentation visit [Outline Developers page](https://www.getoutline.com/developers).
 
 > [!NOTE]
-> Relevant for Outline version [0.83.0](https://github.com/outline/outline/releases/tag/v0.83.0)
+> Relevant for Outline version [0.85.1](https://github.com/outline/outline/releases/tag/v0.85.1)
 
 > [!IMPORTANT]
 > The main branch may be in an unstable or even broken state during development. For stable versions, see releases.
