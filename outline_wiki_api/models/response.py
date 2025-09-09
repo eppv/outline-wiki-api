@@ -70,6 +70,9 @@ class Response(BaseModel):
     pagination: Optional[Pagination] = None
     policies: Optional[List[Policy]] = None
 
+    def __len__(self):
+        return len(self.data)
+
 
 class Permission(str, Enum):
     """Available permission options for collections and documents"""
