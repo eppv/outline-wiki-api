@@ -23,35 +23,45 @@ class User(BaseModel):
     """
     id: UUID = Field(
         ...,
-        description="Unique identifier for the user in UUID v4 format",
-        example="9cb7cb53-0a8f-497d-a8e8-2aff9ee6f2c2"
+        json_schema_extra={
+            "description": "Unique identifier for the user in UUID v4 format",
+            "example": "9cb7cb53-0a8f-497d-a8e8-2aff9ee6f2c2"
+        }
     )
     name: str = Field(
         ...,
-        description="The name of this user, it is migrated from Slack or Google Workspace "
-                    "when the SSO connection is made but can be changed if necessary.",
         min_length=1,
         max_length=100,
-        example="John Doe"
+        json_schema_extra={
+            "description": "The name of this user, it is migrated from Slack or Google Workspace "
+                           "when the SSO connection is made but can be changed if necessary.",
+            "example": "John Doe"
+        }
     )
     avatar_url: Optional[str] = Field(
         None,
         alias='avatarUrl',
-        description="The URL for the image associated with this user, "
-                    "it will be displayed in the application UI and email notifications.",
-        example="https://example.com/avatars/john.jpg"
+        json_schema_extra={
+            "description": "The URL for the image associated with this user, "
+                           "it will be displayed in the application UI and email notifications.",
+            "example": "https://example.com/avatars/john.jpg"
+        }
     )
     email: Optional[EmailStr] = Field(
         None,
-        description="The email associated with this user, it is migrated from Slack or Google Workspace "
-                    "when the SSO connection is made but can be changed if necessary.",
-        example="user@example.com"
+        json_schema_extra={
+            "description": "The email associated with this user, it is migrated from Slack or Google Workspace "
+                           "when the SSO connection is made but can be changed if necessary.",
+            "example": "user@example.com"
+        }
     )
     color: Optional[str] = Field(
         None,
-        description="User's preferred color in hex format",
         pattern="^#[0-9a-fA-F]{6}$",
-        example="#FF5733"
+        json_schema_extra={
+            "description": "The color associated with this user, it will be displayed in the application UI and email notifications.",
+            "example": "#FF5733"
+        }
     )
     role: Optional[UserRole] = Field(
         None,
@@ -60,36 +70,51 @@ class User(BaseModel):
     is_suspended: bool = Field(
         ...,
         alias='isSuspended',
-        description="Whether the user account is currently suspended",
-        example=False
+        json_schema_extra={
+            "description": "Whether the user account is currently suspended",
+            "example": False
+        }
     )
     created_at: datetime = Field(
         ...,
         alias='createdAt',
-        description="The date and time that this user first signed in or was invited as a guest.",
-        example="2023-01-15T09:30:00Z"
+        json_schema_extra={
+            "description": "The date and time that this user first signed in or was invited as a guest.",
+            "example": "2023-01-15T09:30:00Z",
+            "format": "date-time"
+        }
     )
     updated_at: datetime = Field(
         ...,
         alias='updatedAt',
-        description="Timestamp when the user account was last updated",
-        example="2023-06-20T14:25:00Z"
+        json_schema_extra={
+            "description": "Timestamp when the user account was last updated",
+            "example": "2023-06-20T14:25:00Z",
+            "format": "date-time"
+        }
     )
     last_active_at: Optional[datetime] = Field(
         None,
         alias='lastActiveAt',
-        description="The last time this user made an API request, this value is updated at most every 5 minutes.",
-        example="2023-07-01T08:15:00Z"
+        json_schema_extra={
+            "description": "The last time this user made an API request, this value is updated at most every 5 minutes.",
+            "example": "2023-07-01T08:15:00Z",
+            "format": "date-time"
+        }
     )
     timezone: Optional[str] = Field(
         None,
-        description="User's preferred timezone in IANA format",
-        example="America/New_York"
+        json_schema_extra={
+            "description": "User's preferred timezone in IANA format",
+            "example": "America/New_York"
+        }
     )
     language: Optional[str] = Field(
         None,
-        description="User's preferred language code (ISO 639-1)",
-        example="en"
+        json_schema_extra={
+            "description": "User's preferred language code (ISO 639-1)",
+            "example": "en"
+        }
     )
     preferences: Optional[Dict] = Field(
         None,
@@ -107,4 +132,4 @@ class UserResponse(Response):
 
 
 class UserListResponse(Response):
-    data: Optional[List[User]] = []
+    data: Optional[List[User]] = Field(default=[])
