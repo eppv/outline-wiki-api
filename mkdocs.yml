@@ -14,6 +14,7 @@ nav:
           - Collections: reference/resources/collections.md
           - Users: reference/resources/users.md
           - Views: reference/resources/views.md
+          - Events: reference/resources/events.md
       - Models:
           - reference/models/models.md
           - Auth: reference/models/auth.md
@@ -21,6 +22,7 @@ nav:
           - Collection: reference/models/collection.md
           - User: reference/models/user.md
           - View: reference/models/view.md
+          - Event: reference/models/event.md
   - Contacts: contacts.md
 
 theme:
