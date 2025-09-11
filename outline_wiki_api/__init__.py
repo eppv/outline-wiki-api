@@ -7,6 +7,7 @@ from .resources.collections import Collections
 from .resources.auth import Auth
 from .resources.users import Users
 from .resources.views import Views
+from .resources.events import Events
 
 
 class OutlineWiki:
@@ -24,6 +25,7 @@ class OutlineWiki:
         self.collections = Collections(self._client)
         self.users = Users(self._client)
         self.views = Views(self._client)
+        self.events = Events(self._client)
         # TODO: Add other resources here
         logging.basicConfig(level=logging_level, format="%(asctime)s - %(name)s: %(levelname)s: %(message)s")
 
