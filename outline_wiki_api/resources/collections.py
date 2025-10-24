@@ -5,6 +5,7 @@ from ..models.collection import (
     CollectionResponse,
     CollectionListResponse,
     CollectionNavigationResponse,
+    CollectionUserResponse,
 )
 
 
@@ -66,7 +67,7 @@ class Collections(Resources):
         List all collections
 
         Args:
-            query: If set, will filter the results by collection name.
+            query: If set, will filter the results by collection name
             status_filter: Optional statuses to filter by
             pagination: Pagination options
             sorting: Sorting options
@@ -91,28 +92,28 @@ class Collections(Resources):
     def create(
         self,
         name: str,
-        description: str | None,
-        permission: Permission | None,
-        icon: str | None,
-        color: str | None,
-        sharing: bool | None,
+        description: str | None = None,
+        permission: Permission | None = None,
+        icon: str | None = None,
+        color: str | None = None,
+        sharing: bool = False,
     ):
         """
         Create a new collection
 
         Args:
             name: The name of the collection
-            description: The description of the collection
+            description: A brief description of the collection, markdown supported
             permission: The permission of the collection
-            icon: The icon of the collection
-            color: The color of the collection
-            sharing: Whether the collection is shared
+            icon: A string that represents an icon in the outline-icons package or an emoji
+            color: A hex color code for the collection icon
+            sharing: Whether public sharing of documents is allowed
 
         Returns:
             Collection: The created collection
         """
 
-        data = {}
+        data = {"name": name}
         if description:
             data["description"] = description
         if permission:
@@ -127,3 +128,101 @@ class Collections(Resources):
         response = self.post("create", data=data)
 
         return CollectionResponse(**response.json())
+
+    def update(
+        self,
+        collection_id: UUID | str,
+        name: str | None = None,
+        description: str | None = None,
+        permission: Permission | None = None,
+        icon: str | None = None,
+        color: str | None = None,
+        sharing: bool | None = None,
+    ):
+        """
+        Update a collection
+
+        Args:
+            id: The id of the collection
+            name: The name of the collection
+            description: A brief description of the collection, markdown supported
+            permission: The permission of the collection
+            icon: A string that represents an icon in the outline-icons package or an emoji
+            color: A hex color code for the collection icon
+            sharing: Whether public sharing of documents is allowed
+
+        Returns:
+            Collection: The updated collection
+        """
+
+        data = {"id": str(collection_id)}
+        if name:
+            data["name"] = name
+        if description:
+            data["description"] = description
+        if permission:
+            data["permission"] = permission
+        if icon:
+            data["icon"] = icon
+        if color:
+            data["color"] = color
+        if sharing is not None:
+            data["sharing"] = sharing
+
+        response = self.post("update", data=data)
+
+        return CollectionResponse(**response.json())
+
+    def add_user(
+        self,
+        collection_id: UUID | str,
+        user_id: UUID | str,
+        permission: Permission | str | None = None,
+    ) -> CollectionResponse:
+        """
+        Add a collection user
+
+        This method allows you to add a user membership to the specified
+        collection.
+
+        Args:
+            id: The id of the collection
+            email: The id of the user to add
+            permission: The permission to grant the user
+
+        Returns:
+            Collection: The updated collection
+        """
+
+        data = {"id": str(collection_id), "userId": str(user_id)}
+        if permission:
+            data["permission"] = permission
+
+        response = self.post("add_user", data=data)
+
+        return CollectionUserResponse(**response.json())
+
+    def remove_user(
+        self,
+        collection_id: UUID | str,
+        user_id: UUID | str,
+    ) -> bool:
+        """
+        Remove a collection user
+
+        This method allows you to remove a user membership from the specified
+        collection
+
+        Args:
+            id: The id of the collection
+            email: The id of the user to remove
+
+        Returns:
+            success: Status of the operation
+        """
+
+        data = {"id": str(collection_id), "userId": str(user_id)}
+
+        response = self.post("remove_user", data=data)
+
+        return response.json()["success"]
