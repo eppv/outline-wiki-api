@@ -10,6 +10,7 @@ from typing import Optional, Dict, List, Any, Literal
 
 class Period(str, Enum):
     """Available date filter options"""
+
     DAY = "day"
     WEEK = "week"
     MONTH = "month"
@@ -27,6 +28,7 @@ class Policy(BaseModel):
     unauthorized methods will result in the appropriate response code – these can
     be used in an interface to adjust which elements are visible.
     """
+
     id: UUID
     abilities: Dict
 
@@ -35,15 +37,10 @@ class Sort(BaseModel):
     """
     Sorting data model used to configure the order of results obtained in methods that return arrays.
     """
-    field: str = Field(
-        ...,
-        description="Field to sort documents by",
-        example="title"
-    )
+
+    field: str = Field(..., description="Field to sort documents by", example="title")
     direction: Literal["asc", "desc"] = Field(
-        "asc",
-        description="Sort direction - ascending or descending",
-        example="desc"
+        "asc", description="Sort direction - ascending or descending", example="desc"
     )
 
 
@@ -51,12 +48,10 @@ class Pagination(BaseModel):
     """
     Pagination data model used to configure the number of results obtained in methods that return arrays.
     """
+
     offset: int
     limit: int
-    next_path: Optional[str] = Field(
-        None,
-        alias="nextPath"
-    )
+    next_path: Optional[str] = Field(None, alias="nextPath")
     total: Optional[int] = None
 
 
@@ -64,14 +59,20 @@ class Response(BaseModel):
     """
     Base Outline API response data structure
     """
+
     status: int
     ok: bool
     data: Optional[Any] = None
     pagination: Optional[Pagination] = None
     policies: Optional[List[Policy]] = None
 
+    def __len__(self):
+        return len(self.data)
+
 
 class Permission(str, Enum):
     """Available permission options for collections and documents"""
-    READ = 'read'
-    READ_WRITE = 'read_write'
+
+    READ = "read"
+    READ_WRITE = "read_write"
+    ADMIN = "admin"

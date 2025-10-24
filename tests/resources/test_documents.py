@@ -1,11 +1,12 @@
 from unittest.mock import Mock
 from uuid import UUID
 from outline_wiki_api.models.document import (
-    Document, 
-    DocumentListResponse, 
+    Document,
+    DocumentListResponse,
+    DocumentResponse,
     DocumentSearchResultResponse,
     DocumentMoveResponse,
-    DocumentUsersResponse
+    DocumentUsersResponse,
 )
 from outline_wiki_api.models.response import Pagination, Sort
 
@@ -20,7 +21,7 @@ def test_info(documents_resource, mock_client, mock_document_data):
     print(mock_client.request)
 
     # Execute
-    result = documents_resource.info(doc_id)
+    result = documents_resource.info(doc_id).data
 
     # Assert
     assert isinstance(result, Document)
@@ -31,7 +32,7 @@ def test_info(documents_resource, mock_client, mock_document_data):
         endpoint="/documents.info",
         params=None,
         data={"id": doc_id},
-        files=None
+        files=None,
     )
 
 
@@ -46,7 +47,7 @@ def test_info_with_share_id(documents_resource, mock_client, mock_document_data)
     mock_client.request.return_value = mock_response
 
     # Execute
-    result = documents_resource.info(doc_id, share_id)
+    result = documents_resource.info(doc_id, share_id).data
 
     # Assert
     assert isinstance(result, Document)
@@ -56,7 +57,7 @@ def test_info_with_share_id(documents_resource, mock_client, mock_document_data)
         endpoint="/documents.info",
         params=None,
         data={"id": doc_id, "shareId": str(share_id)},
-        files=None
+        files=None,
     )
 
 
@@ -80,7 +81,7 @@ def test_export(documents_resource, mock_client):
         endpoint="/documents.export",
         params=None,
         data={"id": doc_id},
-        files=None
+        files=None,
     )
 
 
@@ -101,7 +102,7 @@ def test_search(documents_resource, mock_client, mock_document_search_results_da
         collection_id=collection_id,
         status_filter="published",
         date_filter="month",
-        pagination=pagination
+        pagination=pagination,
     )
 
     # Assert
@@ -120,9 +121,9 @@ def test_search(documents_resource, mock_client, mock_document_search_results_da
             "statusFilter": "published",
             "dateFilter": "month",
             "offset": 0,
-            "limit": 10
+            "limit": 10,
         },
-        files=None
+        files=None,
     )
 
 
@@ -144,7 +145,7 @@ def test_users(documents_resource, mock_client):
                 "avatarUrl": "https://example.com/avatar1.jpg",
                 "createdAt": "2023-01-15T09:30:00Z",
                 "updatedAt": "2023-06-20T14:25:00Z",
-                "isSuspended": False
+                "isSuspended": False,
             },
             {
                 "id": "550e8400-e29b-41d4-a716-446655440002",
@@ -153,15 +154,11 @@ def test_users(documents_resource, mock_client):
                 "avatarUrl": "https://example.com/avatar2.jpg",
                 "createdAt": "2023-01-15T09:30:00Z",
                 "updatedAt": "2023-06-20T14:25:00Z",
-                "isSuspended": False
-            }
+                "isSuspended": False,
+            },
         ],
-        "pagination": {
-            "offset": 0,
-            "limit": 10,
-            "total": 2
-        },
-        "policies": []
+        "pagination": {"offset": 0, "limit": 10, "total": 2},
+        "policies": [],
     }
     mock_client.request.return_value = mock_response
 
@@ -177,11 +174,8 @@ def test_users(documents_resource, mock_client):
         method="POST",
         endpoint="/documents.users",
         params=None,
-        data={
-            "id": str(doc_id),
-            "query": query
-        },
-        files=None
+        data={"id": str(doc_id), "query": query},
+        files=None,
     )
 
 
@@ -204,7 +198,7 @@ def test_memberships(documents_resource, mock_client):
                     "avatarUrl": "https://example.com/avatar1.jpg",
                     "createdAt": "2023-01-15T09:30:00Z",
                     "updatedAt": "2023-06-20T14:25:00Z",
-                    "isSuspended": False
+                    "isSuspended": False,
                 }
             ],
             "memberships": [
@@ -214,16 +208,12 @@ def test_memberships(documents_resource, mock_client):
                     "collectionId": "550e8400-e29b-41d4-a716-446655440000",
                     "permission": "read_write",
                     "createdAt": "2023-01-15T09:30:00Z",
-                    "updatedAt": "2023-06-20T14:25:00Z"
+                    "updatedAt": "2023-06-20T14:25:00Z",
                 }
-            ]
+            ],
         },
-        "pagination": {
-            "offset": 0,
-            "limit": 10,
-            "total": 1
-        },
-        "policies": []
+        "pagination": {"offset": 0, "limit": 10, "total": 1},
+        "policies": [],
     }
     mock_client.request.return_value = mock_response
 
@@ -241,9 +231,6 @@ def test_memberships(documents_resource, mock_client):
         method="POST",
         endpoint="/documents.memberships",
         params=None,
-        data={
-            "id": str(doc_id),
-            "query": query
-        },
-        files=None
+        data={"id": str(doc_id), "query": query},
+        files=None,
     )
