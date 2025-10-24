@@ -1,13 +1,7 @@
-
-from typing import Optional, Dict, Union, Literal, Tuple
+from typing import Literal, Tuple
 from uuid import UUID
 from .base import Resources
-from ..models.response import (
-    Pagination,
-    Sort,
-    Period,
-    Permission
-)
+from ..models.response import Pagination, Sort, Period, Permission
 from ..models.document import (
     DocumentResponse,
     DocumentListResponse,
@@ -16,7 +10,7 @@ from ..models.document import (
     DocumentMoveResponse,
     DocumentUsersResponse,
     DocumentMembershipsResponse,
-    DocumentStatus
+    DocumentStatus,
 )
 from ..utils import get_file_object_for_import
 
@@ -28,9 +22,12 @@ class Documents(Resources):
     content. Documents are stored in [Markdown](https://spec.commonmark.org/)
     formatting.
     """
+
     _path: str = "/documents"
 
-    def info(self, doc_id: Union[str, UUID], share_id: Optional[Union[str, UUID]] = None) -> DocumentResponse:
+    def info(
+        self, doc_id: str | UUID, share_id: str | UUID | None = None
+    ) -> DocumentResponse:
         """
         Retrieve a document by ID or shareId
 
@@ -48,12 +45,12 @@ class Documents(Resources):
         return DocumentResponse(**response.json())
 
     def import_file(
-            self,
-            file: Union[str, Tuple],
-            collection_id: Union[UUID, str],
-            parent_document_id: Optional[Union[UUID, str]] = None,
-            template: bool = False,
-            publish: bool = False
+        self,
+        file: str | Tuple,
+        collection_id: UUID | str,
+        parent_document_id: UUID | str | None = None,
+        template: bool = False,
+        publish: bool = False,
     ) -> DocumentResponse:
         """
         Import a file as a new document
@@ -104,14 +101,14 @@ class Documents(Resources):
         return response.json()["data"]
 
     def list(
-            self,
-            collection_id: Optional[Union[UUID, str]] = None,
-            user_id: Optional[Union[UUID, str]] = None,
-            backlink_document_id: Optional[Union[UUID, str]] = None,
-            parent_document_id: Optional[Union[UUID, str]] = None,
-            template: Optional[bool] = None,
-            pagination: Optional[Pagination] = None,
-            sorting: Optional[Sort] = None
+        self,
+        collection_id: UUID | str | None = None,
+        user_id: UUID | str | None = None,
+        backlink_document_id: UUID | str | None = None,
+        parent_document_id: UUID | str | None = None,
+        template: bool | None = None,
+        pagination: Pagination | None = None,
+        sorting: Sort | None = None,
     ) -> DocumentListResponse:
         """
         List all published and user's draft documents
@@ -149,14 +146,14 @@ class Documents(Resources):
         return DocumentListResponse(**response.json())
 
     def create(
-            self,
-            title: str,
-            collection_id: Union[UUID, str],
-            text: Optional[str] = None,
-            parent_document_id: Optional[Union[UUID, str]] = None,
-            template_id: Optional[Union[UUID, str]] = None,
-            template: bool = False,
-            publish: bool = False
+        self,
+        title: str,
+        collection_id: UUID | str,
+        text: str | None = None,
+        parent_document_id: UUID | str | None = None,
+        template_id: UUID | str | None = None,
+        template: bool = False,
+        publish: bool = False,
     ) -> DocumentResponse:
         """
         Create a new document
@@ -177,7 +174,7 @@ class Documents(Resources):
             "title": title,
             "collectionId": str(collection_id),
             "template": template,
-            "publish": publish
+            "publish": publish,
         }
         if text:
             data["text"] = text
@@ -190,13 +187,13 @@ class Documents(Resources):
         return DocumentResponse(**response.json())
 
     def update(
-            self,
-            doc_id: Union[UUID, str],
-            title: Optional[str] = None,
-            text: Optional[str] = None,
-            append: bool = False,
-            publish: bool = False,
-            done: bool = False
+        self,
+        doc_id: UUID | str,
+        title: str | None = None,
+        text: str | None = None,
+        append: bool = False,
+        publish: bool = False,
+        done: bool = False,
     ) -> DocumentResponse:
         """
         Args:
@@ -214,12 +211,7 @@ class Documents(Resources):
         Returns:
             DocumentResponse: The response object for the updated document
         """
-        data = {
-            "id": str(doc_id),
-            "append": append,
-            "publish": publish,
-            "done": done
-        }
+        data = {"id": str(doc_id), "append": append, "publish": publish, "done": done}
         if title:
             data["title"] = title
         if text:
@@ -229,14 +221,14 @@ class Documents(Resources):
         return DocumentResponse(**response.json())
 
     def search(
-            self,
-            query: str,
-            collection_id: Optional[Union[UUID, str]] = None,
-            user_id: Optional[Union[UUID, str]] = None,
-            document_id: Optional[Union[UUID, str]] = None,
-            status_filter: Optional[DocumentStatus] = None,
-            date_filter: Optional[Period] = None,
-            pagination: Optional[Union[Pagination, Dict]] = None
+        self,
+        query: str,
+        collection_id: UUID | str | None = None,
+        user_id: UUID | str | None = None,
+        document_id: UUID | str | None = None,
+        status_filter: DocumentStatus | None = None,
+        date_filter: Period | None = None,
+        pagination: Pagination | dict | None = None,
     ) -> DocumentSearchResultResponse:
         """
         Full-text search feature. Use of keywords is most effective.
@@ -271,11 +263,11 @@ class Documents(Resources):
         return DocumentSearchResultResponse(**response.json())
 
     def drafts(
-            self,
-            collection_id: Optional[Union[UUID, str]] = None,
-            date_filter: Optional[Literal["day", "week", "month", "year"]] = None,
-            pagination: Optional[Pagination] = None,
-            sorting: Optional[Sort] = None
+        self,
+        collection_id: UUID | str | None = None,
+        date_filter: Literal["day", "week", "month", "year"] | None = None,
+        pagination: Pagination | None = None,
+        sorting: Sort | None = None,
     ) -> DocumentListResponse:
         """
         List all draft documents belonging to the current user
@@ -295,17 +287,15 @@ class Documents(Resources):
         if date_filter:
             data["dateFilter"] = date_filter
         if pagination:
-            data.update(pagination.dict())
+            data.update(pagination)
         if sorting:
-            data.update(sorting.dict())
+            data.update(sorting)
 
         response = self.post("drafts", data=data)
         return DocumentListResponse(**response.json())
 
     def viewed(
-            self,
-            pagination: Optional[Pagination] = None,
-            sorting: Optional[Sort] = None
+        self, pagination: Pagination | None = None, sorting: Sort | None = None
     ) -> DocumentListResponse:
         """
         List all recently viewed documents
@@ -318,21 +308,21 @@ class Documents(Resources):
         """
         data = {}
         if pagination:
-            data.update(pagination.dict())
+            data.update(pagination)
         if sorting:
-            data.update(sorting.dict())
+            data.update(sorting)
 
         response = self.post("viewed", data=data)
         return DocumentListResponse(**response.json())
 
     def answer_question(
-            self,
-            query: str,
-            user_id: Optional[Union[UUID, str]] = None,
-            collection_id: Optional[Union[UUID, str]] = None,
-            document_id: Optional[Union[UUID, str]] = None,
-            status_filter: Optional[Literal["draft", "archived", "published"]] = None,
-            date_filter: Optional[Literal["day", "week", "month", "year"]] = None
+        self,
+        query: str,
+        user_id: UUID | str = None,
+        collection_id: UUID | str | None = None,
+        document_id: UUID | str | None = None,
+        status_filter: Literal["draft", "archived", "published"] | None = None,
+        date_filter: Literal["day", "week", "month", "year"] | None = None,
     ) -> DocumentAnswerResponse:
         """
         Query documents with natural language
@@ -363,7 +353,7 @@ class Documents(Resources):
         response = self.post("answerQuestion", data=data)
         return DocumentAnswerResponse(**response.json())
 
-    def templatize(self, doc_id: Union[UUID, str], publish: bool = False) -> DocumentResponse:
+    def templatize(self, doc_id: UUID | str, publish: bool = False) -> DocumentResponse:
         """
         Create a template from a document
 
@@ -374,14 +364,11 @@ class Documents(Resources):
         Returns:
             DocumentResponse: The response object for the created template
         """
-        data = {
-            "id": str(doc_id),
-            "publish": publish
-        }
+        data = {"id": str(doc_id), "publish": publish}
         response = self.post("templatize", data=data)
         return DocumentResponse(**response.json())
 
-    def unpublish(self, doc_id: Union[UUID, str]) -> DocumentResponse:
+    def unpublish(self, doc_id: UUID | str) -> DocumentResponse:
         """
         Unpublish a document
 
@@ -395,10 +382,10 @@ class Documents(Resources):
         return DocumentResponse(**response.json())
 
     def move(
-            self,
-            doc_id: Union[UUID, str],
-            collection_id: Union[UUID, str],
-            parent_document_id: Optional[Union[UUID, str]] = None
+        self,
+        doc_id: UUID | str,
+        collection_id: UUID | str,
+        parent_document_id: UUID | str | None = None,
     ) -> DocumentMoveResponse:
         """
         Move a document to a new location or collection.md. If no parent document
@@ -412,17 +399,14 @@ class Documents(Resources):
         Returns:
             DocumentMoveResponse: The response object with the updated documents and collections data
         """
-        data = {
-            "id": str(doc_id),
-            "collectionId": str(collection_id)
-        }
+        data = {"id": str(doc_id), "collectionId": str(collection_id)}
         if parent_document_id:
             data["parentDocumentId"] = str(parent_document_id)
 
         response = self.post("move", data=data)
         return DocumentMoveResponse(**response.json())
 
-    def archive(self, doc_id: Union[UUID, str]) -> DocumentResponse:
+    def archive(self, doc_id: UUID | str) -> DocumentResponse:
         """
         Archive a document
 
@@ -436,9 +420,7 @@ class Documents(Resources):
         return DocumentResponse(**response.json())
 
     def restore(
-            self,
-            doc_id: Union[UUID, str],
-            revision_id: Optional[Union[UUID, str]] = None
+        self, doc_id: UUID | str, revision_id: UUID | str | None = None
     ) -> DocumentResponse:
         """
         Restore a document
@@ -457,11 +439,7 @@ class Documents(Resources):
         response = self.post("restore", data=data)
         return DocumentResponse(**response.json())
 
-    def delete(
-            self,
-            doc_id: Union[UUID, str],
-            permanent: bool = False
-    ) -> bool:
+    def delete(self, doc_id: UUID | str, permanent: bool = False) -> bool:
         """
         Delete a document
 
@@ -472,16 +450,11 @@ class Documents(Resources):
         Returns:
             bool: Success status
         """
-        response = self.post("delete", data={
-            "id": str(doc_id),
-            "permanent": permanent
-        })
+        response = self.post("delete", data={"id": str(doc_id), "permanent": permanent})
         return response.json()["success"]
 
     def users(
-            self,
-            doc_id: Union[UUID, str],
-            query: Optional[str] = None
+        self, doc_id: UUID | str, query: str | None = None
     ) -> DocumentUsersResponse:
         """
         List all users with access to a document
@@ -501,9 +474,7 @@ class Documents(Resources):
         return DocumentUsersResponse(**response.json())
 
     def memberships(
-            self,
-            doc_id: Union[UUID, str],
-            query: Optional[str] = None
+        self, doc_id: UUID | str, query: str | None = None
     ) -> DocumentMembershipsResponse:
         """
         List users with direct membership to a document
@@ -523,10 +494,10 @@ class Documents(Resources):
         return DocumentMembershipsResponse(**response.json())
 
     def add_user(
-            self,
-            doc_id: Union[UUID, str],
-            user_id: Union[UUID, str],
-            permission: Optional[Permission] = None
+        self,
+        doc_id: UUID | str,
+        user_id: UUID | str,
+        permission: Permission | None = None,
     ) -> DocumentMembershipsResponse:
         """
         Add a user to a document
@@ -539,21 +510,14 @@ class Documents(Resources):
         Returns:
             DocumentMembershipsResponse: The response object with the list of updated users and memberships
         """
-        data = {
-            "id": str(doc_id),
-            "userId": str(user_id)
-        }
+        data = {"id": str(doc_id), "userId": str(user_id)}
         if permission:
             data["permission"] = permission
 
         response = self.post("add_user", data=data)
         return DocumentMembershipsResponse(**response.json())
 
-    def remove_user(
-            self,
-            doc_id: Union[UUID, str],
-            user_id: Union[UUID, str]
-    ) -> bool:
+    def remove_user(self, doc_id: UUID | str, user_id: UUID | str) -> bool:
         """
         Remove a user from a document
 
@@ -564,10 +528,7 @@ class Documents(Resources):
         Returns:
             bool: Success status
         """
-        response = self.post("remove_user", data={
-            "id": str(doc_id),
-            "userId": str(user_id)
-        })
+        response = self.post(
+            "remove_user", data={"id": str(doc_id), "userId": str(user_id)}
+        )
         return response.json()["success"]
-
-    

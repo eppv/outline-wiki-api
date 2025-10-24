@@ -4,5 +4,6 @@
       members:
         - UserRole
         - User
+        - UserMembership
         - UserResponse
         - UserListResponse
