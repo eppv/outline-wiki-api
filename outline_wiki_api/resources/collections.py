@@ -20,7 +20,11 @@ class Collections(Resources):
         info: Retrieve a collection
         documents: Retrieve a collections document structure
         list: List all collections
-
+        create: Create a collection
+        update: Update a collection
+        delete: Delete a collection
+        add_user: Add a user to a collection
+        remove_user: Remove a user from a collection
     """
 
     _path: str = "/collections"
@@ -172,6 +176,21 @@ class Collections(Resources):
         response = self.post("update", data=data)
 
         return CollectionResponse(**response.json())
+
+    def delete(self, collection_id: UUID | str):
+        """
+        Delete a collection
+
+        This method allows you to delete a collection.
+
+        Args:
+            id: The id of the collection
+
+        Returns:
+            bool: True if the collection was deleted, False otherwise
+        """
+        response = self.post("delete", data={"id": str(collection_id)})
+        return response.json()["success"]
 
     def add_user(
         self,
