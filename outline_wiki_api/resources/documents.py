@@ -141,9 +141,9 @@ class Documents(Resources):
         if template is not None:
             data["template"] = template
         if pagination:
-            data.update(pagination.dict())
+            data.update(pagination)
         if sorting:
-            data.update(sorting.dict())
+            data.update(sorting)
 
         response = self.post("list", data=data)
         return DocumentListResponse(**response.json())
@@ -264,10 +264,7 @@ class Documents(Resources):
         if date_filter:
             data["dateFilter"] = date_filter
         if pagination:
-            if isinstance(pagination, Pagination):
-                data.update(pagination.dict())
-            elif isinstance(pagination, Dict):
-                data.update(pagination)
+            data.update(pagination)
 
         response = self.post("search", data=data)
 
