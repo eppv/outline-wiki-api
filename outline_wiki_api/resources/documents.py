@@ -149,6 +149,7 @@ class Documents(Resources):
         self,
         title: str,
         collection_id: UUID | str,
+        icon: str | None = None,
         text: str | None = None,
         parent_document_id: UUID | str | None = None,
         template_id: UUID | str | None = None,
@@ -160,6 +161,7 @@ class Documents(Resources):
 
         Args:
             title: Document title
+            icon: Document icon
             collection_id: Target collection ID
             text: Document content (markdown)
             parent_document_id: Optional parent document ID
@@ -176,6 +178,8 @@ class Documents(Resources):
             "template": template,
             "publish": publish,
         }
+        if icon:
+            data["icon"] = icon
         if text:
             data["text"] = text
         if parent_document_id:
@@ -190,6 +194,7 @@ class Documents(Resources):
         self,
         doc_id: UUID | str,
         title: str | None = None,
+        icon: str | None = None,
         text: str | None = None,
         append: bool = False,
         publish: bool = False,
@@ -199,6 +204,7 @@ class Documents(Resources):
         Args:
             doc_id: Unique identifier for the document. Either the UUID or the urlId is acceptable.
             title: The title of the document.
+            icon: The icon for the document.
             text: The body of the document in markdown.
             append: If true the text field will be appended to the end
                     of the existing document, rather than the default behavior of
@@ -214,6 +220,8 @@ class Documents(Resources):
         data = {"id": str(doc_id), "append": append, "publish": publish, "done": done}
         if title:
             data["title"] = title
+        if icon:
+            data["icon"] = icon
         if text:
             data["text"] = text
 
