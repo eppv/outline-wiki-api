@@ -2,7 +2,7 @@ from datetime import datetime
 from typing import Optional, List, Self
 from uuid import UUID
 from pydantic import BaseModel, Field
-from .user import User
+from .user import User, UserMembership
 from .response import Sort, Response, Permission
 
 
@@ -20,20 +20,20 @@ class Collection(BaseModel):
             "description": "Unique identifier for the object",
             "example": "550e8400-e29b-41d4-a716-446655440000",
             "readOnly": True,
-        }
+        },
     )
 
     url_id: str = Field(
         ...,
-        alias='urlId',
+        alias="urlId",
         min_length=8,
         max_length=16,
         json_schema_extra={
             "description": "A short unique identifier that can be used to identify the "
-                           "collection instead of the UUID",
+            "collection instead of the UUID",
             "example": "hDYep1TPAM",
             "readOnly": True,
-        }
+        },
     )
 
     name: str = Field(
@@ -41,26 +41,25 @@ class Collection(BaseModel):
         max_length=100,
         json_schema_extra={
             "description": "The name of the collection",
-            "example": "Human Resources"
-        }
-
+            "example": "Human Resources",
+        },
     )
 
     description: Optional[str] = Field(
         "",
         json_schema_extra={
             "description": "A description of the collection, may contain markdown formatting",
-            "example": "All HR policies and procedures"
-        }
+            "example": "All HR policies and procedures",
+        },
     )
 
     sort: Optional[Sort] = Field(
         None,
         json_schema_extra={
             "description": "The sort of documents in the collection. Note that not all "
-                           "API responses respect this and it is left as a frontend concern "
-                           "to implement"
-        }
+            "API responses respect this and it is left as a frontend concern "
+            "to implement"
+        },
     )
 
     index: str = Field(
@@ -69,8 +68,8 @@ class Collection(BaseModel):
         max_length=10,
         json_schema_extra={
             "description": "The position of the collection in the sidebar",
-            "example": "P"
-        }
+            "example": "P",
+        },
     )
 
     color: Optional[str] = Field(
@@ -78,81 +77,79 @@ class Collection(BaseModel):
         pattern="^#[0-9a-fA-F]{6}$",
         json_schema_extra={
             "description": "A color representing the collection, this is used to help "
-                           "make collections more identifiable in the UI. It should be in "
-                           "HEX format including the #",
-            "example": "#123123"
-        }
-
+            "make collections more identifiable in the UI. It should be in "
+            "HEX format including the #",
+            "example": "#123123",
+        },
     )
 
     icon: Optional[str] = Field(
         None,
         json_schema_extra={
             "description": "A string that represents an icon in the outline-icons package",
-            "example": "folder"
-        }
+            "example": "folder",
+        },
     )
 
     permission: Optional[Permission] = Field(
-        None,
-        description="Access permissions for this collection"
+        None, description="Access permissions for this collection"
     )
 
     sharing: bool = Field(
         False,
         json_schema_extra={
             "description": "Whether public document sharing is enabled in this collection",
-            "example": False
-        }
+            "example": False,
+        },
     )
 
     created_at: datetime = Field(
         ...,
-        alias='createdAt',
+        alias="createdAt",
         json_schema_extra={
             "description": "The date and time that this object was created",
             "example": "2023-01-15T09:30:00Z",
-            "readOnly": True
-        }
+            "readOnly": True,
+        },
     )
 
     updated_at: datetime = Field(
         ...,
-        alias='updatedAt',
+        alias="updatedAt",
         json_schema_extra={
             "description": "The date and time that this object was last changed",
             "example": "2023-06-20T14:25:00Z",
-            "readOnly": True
-        }
+            "readOnly": True,
+        },
     )
 
     deleted_at: Optional[datetime] = Field(
         None,
-        alias='deletedAt',
+        alias="deletedAt",
         json_schema_extra={
             "description": "The date and time that this object was deleted",
             "example": None,
-            "readOnly": True
-        }
+            "readOnly": True,
+        },
     )
 
     archived_at: Optional[datetime] = Field(
         None,
-        alias='archivedAt',
+        alias="archivedAt",
         json_schema_extra={
             "description": "The date and time that this object was archived",
             "example": None,
-            "readOnly": True
-        }
+            "readOnly": True,
+        },
     )
 
     archived_by: Optional[User] = Field(
         None,
-        alias='archivedBy',
+        alias="archivedBy",
         json_schema_extra={
             "description": "User who archived this collection",
-            "readOnly": True
-        }
+            "readOnly": True,
+        },
     )
 
 
@@ -160,13 +157,14 @@ class NavigationNode(BaseModel):
     """
     Represents a document as a navigation node with its children (also represented as navigation nodes)
     """
+
     id: UUID = Field(
         ...,
         json_schema_extra={
             "description": "Unique identifier for the object",
             "example": "550e8400-e29b-41d4-a716-446655440000",
-            "readOnly": True
-        }
+            "readOnly": True,
+        },
     )
     url: str
     title: str
@@ -178,8 +176,8 @@ class NavigationNode(BaseModel):
         json_schema_extra={
             "description": "Document's icon color in hex format",
             "example": "#FF5733",
-            "readOnly": True
-        }
+            "readOnly": True,
+        },
     )
 
 
@@ -193,3 +191,7 @@ class CollectionNavigationResponse(Response):
 
 class CollectionListResponse(Response):
     data: Optional[List[Collection]] = Field([])
+
+
+class CollectionUserResponse(Response):
+    data: UserMembership | None = Field(None)

@@ -5,7 +5,6 @@ Classes:
     Events: Events resources method group main class
 """
 
-from typing import Optional, List, Dict, Union
 from uuid import UUID
 from .base import Resources
 from ..models.response import Pagination, Sort
@@ -19,17 +18,18 @@ class Events(Resources):
     Methods:
         list: List all events
     """
-    _path: str = '/events'
+
+    _path: str = "/events"
 
     def list(
-            self,
-            name: Optional[str] = None,
-            actor_id: Optional[Union[str, UUID]] = None,
-            document_id: Optional[Union[str, UUID]] = None,
-            collection_id: Optional[Union[str, UUID]] = None,
-            audit_log: Optional[bool] = None,
-            pagination: Optional[Pagination] = None,
-            sorting: Optional[Sort] = None
+        self,
+        name: str | None = None,
+        actor_id: str | UUID | None = None,
+        document_id: str | UUID | None = None,
+        collection_id: str | UUID | None = None,
+        audit_log: bool | None = None,
+        pagination: Pagination | None = None,
+        sorting: Sort | None = None,
     ):
         """
         List all events
@@ -51,18 +51,18 @@ class Events(Resources):
         """
         data = {}
         if name:
-            data['name'] = name
+            data["name"] = name
         if actor_id:
-            data['actor_id'] = str(actor_id)
+            data["actor_id"] = str(actor_id)
         if document_id:
-            data['document_id'] = str(document_id)
+            data["document_id"] = str(document_id)
         if collection_id:
-            data['collection_id'] = str(collection_id)
+            data["collection_id"] = str(collection_id)
         if audit_log:
-            data['audit_log'] = audit_log
+            data["audit_log"] = audit_log
         if pagination:
-            data['pagination'] = pagination
+            data["pagination"] = pagination
         if sorting:
-            data['sorting'] = sorting
+            data["sorting"] = sorting
         response = self.post("list", data=data)
         return EventListResponse(**response.json())
