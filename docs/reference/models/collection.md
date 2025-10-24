@@ -4,4 +4,6 @@
       members:
         - Permission
         - Collection
+        - CollectionNavigationResponse
         - CollectionListResponse
+        - CollectionUserResponse
