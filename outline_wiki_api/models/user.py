@@ -1,6 +1,5 @@
 from datetime import datetime
 from enum import Enum
-from typing import Optional, Dict, List
 from uuid import UUID
 from pydantic import BaseModel, Field, EmailStr
 from .response import Response
@@ -41,7 +40,7 @@ class User(BaseModel):
             "example": "John Doe",
         },
     )
-    avatar_url: Optional[str] = Field(
+    avatar_url: str | None = Field(
         None,
         alias="avatarUrl",
         json_schema_extra={
@@ -50,7 +49,7 @@ class User(BaseModel):
             "example": "https://example.com/avatars/john.jpg",
         },
     )
-    email: Optional[EmailStr] = Field(
+    email: EmailStr | None = Field(
         None,
         json_schema_extra={
             "description": "The email associated with this user, it is migrated from Slack or Google Workspace "
@@ -58,7 +57,7 @@ class User(BaseModel):
             "example": "user@example.com",
         },
     )
-    color: Optional[str] = Field(
+    color: str | None = Field(
         None,
         pattern="^#[0-9a-fA-F]{6}$",
         json_schema_extra={
@@ -66,7 +65,7 @@ class User(BaseModel):
             "example": "#FF5733",
         },
     )
-    role: Optional[UserRole] = Field(
+    role: UserRole | None = Field(
         None, description="User's role determining access permissions"
     )
     is_suspended: bool = Field(
@@ -95,7 +94,7 @@ class User(BaseModel):
             "format": "date-time",
         },
     )
-    last_active_at: Optional[datetime] = Field(
+    last_active_at: datetime | None = Field(
         None,
         alias="lastActiveAt",
         json_schema_extra={
@@ -104,24 +103,24 @@ class User(BaseModel):
             "format": "date-time",
         },
     )
-    timezone: Optional[str] = Field(
+    timezone: str | None = Field(
         None,
         json_schema_extra={
             "description": "User's preferred timezone in IANA format",
             "example": "America/New_York",
         },
     )
-    language: Optional[str] = Field(
+    language: str | None = Field(
         None,
         json_schema_extra={
             "description": "User's preferred language code (ISO 639-1)",
             "example": "en",
         },
     )
-    preferences: Optional[Dict] = Field(
+    preferences: dict | None = Field(
         None, description="Dictionary of user-specific preferences and settings"
     )
-    notification_settings: Optional[Dict] = Field(
+    notification_settings: dict | None = Field(
         None,
         alias="notificationSettings",
         description="User's notification preferences and settings",
