@@ -1,9 +1,11 @@
 from datetime import datetime
-from typing import Optional, List, Self
 from uuid import UUID
+
 from pydantic import BaseModel, Field
+
+from ..const import HEX_COLOR_PATTERN
+from .response import Permission, Response, Sort
 from .user import User, UserMembership
-from .response import Sort, Response, Permission
 
 
 class Collection(BaseModel):
@@ -45,7 +47,7 @@ class Collection(BaseModel):
         },
     )
 
-    description: Optional[str] = Field(
+    description: str | None = Field(
         "",
         json_schema_extra={
             "description": "A description of the collection, may contain markdown formatting",
@@ -53,7 +55,7 @@ class Collection(BaseModel):
         },
     )
 
-    sort: Optional[Sort] = Field(
+    sort: Sort | None = Field(
         None,
         json_schema_extra={
             "description": "The sort of documents in the collection. Note that not all "
@@ -72,9 +74,9 @@ class Collection(BaseModel):
         },
     )
 
-    color: Optional[str] = Field(
+    color: str | None = Field(
         ...,
-        pattern="^#[0-9a-fA-F]{6}$",
+        pattern=HEX_COLOR_PATTERN,
         json_schema_extra={
             "description": "A color representing the collection, this is used to help "
             "make collections more identifiable in the UI. It should be in "
@@ -83,7 +85,7 @@ class Collection(BaseModel):
         },
     )
 
-    icon: Optional[str] = Field(
+    icon: str | None = Field(
         None,
         json_schema_extra={
             "description": "A string that represents an icon in the outline-icons package",
@@ -91,7 +93,7 @@ class Collection(BaseModel):
         },
     )
 
-    permission: Optional[Permission] = Field(
+    permission: Permission | None = Field(
         None, description="Access permissions for this collection"
     )
 
@@ -123,7 +125,7 @@ class Collection(BaseModel):
         },
     )
 
-    deleted_at: Optional[datetime] = Field(
+    deleted_at: datetime | None = Field(
         None,
         alias="deletedAt",
         json_schema_extra={
@@ -133,7 +135,7 @@ class Collection(BaseModel):
         },
     )
 
-    archived_at: Optional[datetime] = Field(
+    archived_at: datetime | None = Field(
         None,
         alias="archivedAt",
         json_schema_extra={
@@ -143,7 +145,7 @@ class Collection(BaseModel):
         },
     )
 
-    archived_by: Optional[User] = Field(
+    archived_by: User | None = Field(
         None,
         alias="archivedBy",
         json_schema_extra={
@@ -168,11 +170,11 @@ class NavigationNode(BaseModel):
     )
     url: str
     title: str
-    children: List[Optional[Self]] = Field([])
-    icon: Optional[str] = Field(None)
-    color: Optional[str] = Field(
+    children: list["NavigationNode"] = Field(default_factory=list)
+    icon: str | None = Field(None)
+    color: str | None = Field(
         None,
-        pattern="^#[0-9a-fA-F]{6}$",
+        pattern=HEX_COLOR_PATTERN,
         json_schema_extra={
             "description": "Document's icon color in hex format",
             "example": "#FF5733",
@@ -182,15 +184,15 @@ class NavigationNode(BaseModel):
 
 
 class CollectionResponse(Response):
-    data: Optional[Collection] = Field(None)
+    data: Collection | None = Field(None)
 
 
 class CollectionNavigationResponse(Response):
-    data: List[NavigationNode]
+    data: list[NavigationNode]
 
 
 class CollectionListResponse(Response):
-    data: Optional[List[Collection]] = Field([])
+    data: list[Collection] = Field(default_factory=list)
 
 
 class CollectionUserResponse(Response):
