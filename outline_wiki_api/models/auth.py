@@ -3,11 +3,10 @@ Data structures for Authentication resource information and responses
 """
 
 from pydantic import BaseModel, Field
-from typing import Optional, List, Union, Dict
 
 from .response import Response
-from .user import User
 from .team import Team
+from .user import User
 
 
 class AuthProvider(BaseModel):
@@ -20,29 +19,34 @@ class AuthInfoData(BaseModel):
     """
     Authentication data for the current API key
     """
+
     user: User
     team: Team
-    groups: Optional[List]
-    group_users: Optional[List] = Field(..., alias="groupUsers")
+    groups: list | None = None
+    group_users: list | None = Field(None, alias="groupUsers")
     collaboration_token: str = Field(..., alias="collaborationToken")
-    available_teams: Optional[List] = Field(..., alias="availableTeams")
-    token: Optional[str] = Field(None, description="Authentication token returned by login and register endpoints")
+    available_teams: list | None = Field(None, alias="availableTeams")
+    token: str | None = Field(
+        None,
+        description="Authentication token returned by login and register endpoints",
+    )
 
 
 class AuthConfigData(BaseModel):
     """
     Authentication options
     """
+
     name: str
-    hostname: Optional[str] = None
-    services: Optional[List[Dict]] = Field([])
-    custom_theme: Optional[Dict] = Field({}, alias='customTheme')
-    providers: Optional[List[AuthProvider]]
+    hostname: str | None = None
+    services: list[dict] | None = Field([])
+    custom_theme: dict | None = Field({}, alias="customTheme")
+    providers: list[AuthProvider] | None = None
 
 
 class AuthResponse(Response):
     """
     Authentication details response for the current API key
     """
-    data: Optional[Union[AuthInfoData, AuthConfigData]]
 
+    data: AuthInfoData | AuthConfigData | None = None

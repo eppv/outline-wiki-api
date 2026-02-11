@@ -2,10 +2,11 @@
 Basic API data structures
 """
 
-from uuid import UUID
 from enum import Enum
+from typing import Any, Dict, Literal
+from uuid import UUID
+
 from pydantic import BaseModel, Field
-from typing import Optional, Dict, List, Any, Literal
 
 
 class Period(str, Enum):
@@ -51,8 +52,8 @@ class Pagination(BaseModel):
 
     offset: int
     limit: int
-    next_path: Optional[str] = Field(None, alias="nextPath")
-    total: Optional[int] = None
+    next_path: str | None = Field(None, alias="nextPath")
+    total: int | None = None
 
 
 class Response(BaseModel):
@@ -62,9 +63,9 @@ class Response(BaseModel):
 
     status: int
     ok: bool
-    data: Optional[Any] = None
-    pagination: Optional[Pagination] = None
-    policies: Optional[List[Policy]] = None
+    data: Any | None = None
+    pagination: Pagination | None = None
+    policies: list[Policy] | None = Field([])
 
     def __len__(self):
         return len(self.data)
