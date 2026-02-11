@@ -194,7 +194,7 @@ class Documents(Resources):
         self,
         doc_id: UUID | str,
         title: str | None = None,
-        icon: str | None = None,
+        icon: str | bool | None = None,
         text: str | None = None,
         append: bool = False,
         publish: bool = False,
@@ -204,7 +204,7 @@ class Documents(Resources):
         Args:
             doc_id: Unique identifier for the document. Either the UUID or the urlId is acceptable.
             title: The title of the document.
-            icon: The icon for the document.
+            icon: The icon for the document. Set to 'False' to remove the icon.
             text: The body of the document in markdown.
             append: If true the text field will be appended to the end
                     of the existing document, rather than the default behavior of
@@ -222,6 +222,8 @@ class Documents(Resources):
             data["title"] = title
         if icon:
             data["icon"] = icon
+        elif icon is False:
+            data["icon"] = None
         if text:
             data["text"] = text
 
