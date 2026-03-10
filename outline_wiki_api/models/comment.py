@@ -1,9 +1,10 @@
 from datetime import datetime
-from typing import Optional, List
-from pydantic import BaseModel, Field
 from uuid import UUID
-from .user import User
+
+from pydantic import BaseModel, Field
+
 from .response import Response
+from .user import User
 
 
 class Data(BaseModel):
@@ -14,7 +15,7 @@ class Data(BaseModel):
     type: str = Field(
         ..., description="The type of the document node", examples=["doc"]
     )
-    content: List[dict] = Field(
+    content: list[dict] = Field(
         ...,
         description="The content of the document node",
     )
@@ -33,7 +34,7 @@ class Comment(BaseModel):
             "read_only": "true",
         },
     )
-    parent_comment_id: Optional[UUID] = Field(
+    parent_comment_id: UUID | None = Field(
         None,
         alias="parentCommentId",
         description="Identifier for the comment this is a child of, if any.",
@@ -63,20 +64,20 @@ class Comment(BaseModel):
         description="User who created this comment",
         json_schema_extra={"read_only": "true"},
     )
-    updated_at: Optional[datetime] = Field(
+    updated_at: datetime | None = Field(
         ...,
         alias="updatedAt",
         description="The date and time that this object was last changed",
         examples=["2023-06-20T14:25:00Z"],
         json_schema_extra={"read_only": "true"},
     )
-    updated_by: Optional[User] = Field(
+    updated_by: User | None = Field(
         None,
         alias="updatedBy",
         description="User who last updated this comment",
         json_schema_extra={"read_only": "true"},
     )
-    anchor_text: Optional[str] = Field(
+    anchor_text: str | None = Field(
         None,
         alias="anchorText",
         description="The document text that the comment is anchored to, only included if includeAnchorText=true.",
@@ -87,10 +88,10 @@ class Comment(BaseModel):
 class CommentResponse(Response):
     """A single Comment object response"""
 
-    data: Optional[Comment] = None
+    data: Comment | None = Field(None)
 
 
 class CommentListResponse(Response):
     """A Collection of the Comment objects response"""
 
-    data: Optional[List[Comment]] = None
+    data: list[Comment] | None = Field(None)

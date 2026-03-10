@@ -6,7 +6,7 @@ A python wrapper for [Outline](https://www.getoutline.com) knowledge base platfo
     For full Outline API documentation visit [Outline Developers page](https://www.getoutline.com/developers).
 
 !!! warning
-    Relevant for  Outline version [0.87.3](https://github.com/outline/outline/releases/tag/v0.87.3)
+    Relevant for  Outline version [1.4.0](https://github.com/outline/outline/releases/tag/v1.4.0)
 
 ---
 

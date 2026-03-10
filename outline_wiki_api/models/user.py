@@ -1,9 +1,12 @@
 from datetime import datetime
 from enum import Enum
 from uuid import UUID
-from pydantic import BaseModel, Field, EmailStr
-from .response import Response
+
+from pydantic import BaseModel, EmailStr, Field
+
+from ..const import HEX_COLOR_PATTERN
 from .membership import Membership
+from .response import Response
 
 
 class UserRole(str, Enum):
@@ -59,7 +62,7 @@ class User(BaseModel):
     )
     color: str | None = Field(
         None,
-        pattern="^#[0-9a-fA-F]{6}$",
+        pattern=HEX_COLOR_PATTERN,
         json_schema_extra={
             "description": "The color associated with this user, it will be displayed in the application UI and email notifications.",
             "example": "#FF5733",
